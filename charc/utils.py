@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-import time
+import calendar
 
-def datetime_for_seconds_and_nanoseconds(seconds, nanoseconds=0.0):
+def datetime_from_seconds_and_nanoseconds(seconds, nanoseconds=0.0):
     timestamp = seconds + 1.e-9 * nanoseconds
     return datetime.datetime.utcfromtimestamp(timestamp)
 
 
 def seconds_and_nanoseconds_from_datetime(dt):
-    seconds = int(time.mktime(dt.utctimetuple()))
+    seconds = int(calendar.timegm(dt.utctimetuple()))
     nanoseconds = int(dt.microsecond * 1e3)
     return seconds, nanoseconds
 

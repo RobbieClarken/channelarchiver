@@ -52,7 +52,7 @@ class ChannelData(object):
         for sample in archive_data['values']:
             status.append(sample['stat'])
             severity.append(sample['sevr'])
-            time.append(utils.datetime_for_seconds_and_nanoseconds(sample['secs'], sample['nano']))
+            time.append(utils.datetime_from_seconds_and_nanoseconds(sample['secs'], sample['nano']))
             values.append(sample['value'])
         self.status = status
         self.severity = severity
@@ -77,8 +77,8 @@ class Archiver(object):
             archive_key = archive['key']
             for archive_details in self.archiver.names(archive_key, channel_name_pattern):
                 name = archive_details['name']
-                start_time = utils.datetime_for_seconds_and_nanoseconds(archive_details['start_sec'], archive_details['start_nano'])
-                end_time = utils.datetime_for_seconds_and_nanoseconds(archive_details['end_sec'], archive_details['end_nano'])
+                start_time = utils.datetime_from_seconds_and_nanoseconds(archive_details['start_sec'], archive_details['start_nano'])
+                end_time = utils.datetime_from_seconds_and_nanoseconds(archive_details['end_sec'], archive_details['end_nano'])
                 archive_properties = ArchiveProperties(archive_key, start_time, end_time)
                 if list_emptied_for_channel[name]:
                     self.archives_for_name[name].append(archive_properties)
