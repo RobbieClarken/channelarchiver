@@ -8,6 +8,11 @@ import itertools
 
 from . import codes
 
+try:
+    StrType = basestring
+except NameError: # Python 3
+    StrType = str
+
 
 ArchiveProperties = collections.namedtuple('ArchiveProperties', 'key start_time end_time')
 ChannelLimits = collections.namedtuple('ChannelLimits', 'low high')
@@ -33,8 +38,9 @@ def overlap_between_datetime_ranges(first_range_start, first_range_end,
 
 class ChannelData(object):
 
-    def __init__(self, archive_data):
+    def __init__(self, archive_key, archive_data):
         super(ChannelData, self).__init__()
+        self.archive_key = archive_key
         self.name = archive_data['name']
         self.data_type = archive_data['type']
         meta_data = archive_data['meta']
@@ -95,9 +101,15 @@ class Archiver(object):
                     self.archives_for_name[name][:] = [archive_properties]
                     list_emptied_for_channel[name] = True
     
-    def values(self, channel_names, start_datetime, end_datetime, count=10000,
+    def get(self, channel_names, start_datetime, end_datetime, count=10000,
                interpolation=codes.interpolate.RAW, scan_archives=True, archive_keys=None):
         
+        received_str = isinstance(channel_names, StrType)
+        if received_str:
+            channel_names = [ channel_names ]
+            if archive_keys is not None:
+                archive_keys = [ archive_keys ]
+
         # Convert datetimes to seconds and nanoseconds for archiver request
         start_seconds, start_nanoseconds = seconds_and_nanoseconds_from_datetime(start_datetime)
         end_seconds, end_nanoseconds = seconds_and_nanoseconds_from_datetime(end_datetime)
@@ -131,7 +143,7 @@ class Archiver(object):
         for archive_key, channels in names_for_key.iteritems():
             data = self.archiver.values(archive_key, channels, start_seconds, start_nanoseconds, end_seconds, end_nanoseconds, count, interpolation)
             for archive_data in data:
-                channel_data = ChannelData(archive_data)
+                channel_data = ChannelData(archive_key, archive_data)
                 return_data[channel_names.index(channel_data.name)] = channel_data
-                
-        return return_data
+
+        return return_data if not received_str else return_data[0]
