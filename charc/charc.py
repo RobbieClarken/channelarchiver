@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
-import xmlrpclib
-import datetime
-import time
+try:
+    from xmlrpclib import Server
+except ImportError: # Python 3
+    from xmlrpc.client import Server
+
 import collections
 import itertools
 
 from . import codes
+from . import utils
 
 try:
     StrType = basestring
@@ -16,24 +19,6 @@ except NameError: # Python 3
 
 ArchiveProperties = collections.namedtuple('ArchiveProperties', 'key start_time end_time')
 ChannelLimits = collections.namedtuple('ChannelLimits', 'low high')
-
-
-def datetime_for_seconds_and_nanoseconds(seconds, nanoseconds=0.0):
-    timestamp = seconds + 1.e-9 * nanoseconds
-    return datetime.datetime.utcfromtimestamp(timestamp)
-
-
-def seconds_and_nanoseconds_from_datetime(dt):
-    seconds = int(time.mktime(dt.utctimetuple()))
-    nanoseconds = int(dt.microsecond * 1e3)
-    return seconds, nanoseconds
-
-
-def overlap_between_datetime_ranges(first_range_start, first_range_end,
-                                    second_range_start, second_range_end):
-    latest_start = max(first_range_start, second_range_start)
-    earliest_end = min(first_range_end, second_range_end)
-    return max((earliest_end - latest_start).total_seconds(), 0.0)
 
 
 class ChannelData(object):
@@ -67,7 +52,7 @@ class ChannelData(object):
         for sample in archive_data['values']:
             status.append(sample['stat'])
             severity.append(sample['sevr'])
-            time.append(datetime_for_seconds_and_nanoseconds(sample['secs'], sample['nano']))
+            time.append(utils.datetime_for_seconds_and_nanoseconds(sample['secs'], sample['nano']))
             values.append(sample['value'])
         self.status = status
         self.severity = severity
@@ -79,7 +64,7 @@ class Archiver(object):
 
     def __init__(self, host):
         super(Archiver, self).__init__()
-        self.server = xmlrpclib.Server(host)
+        self.server = Server(host)
         self.archiver = self.server.archiver
         self.archives_for_name = collections.defaultdict(list)
     
@@ -92,8 +77,8 @@ class Archiver(object):
             archive_key = archive['key']
             for archive_details in self.archiver.names(archive_key, channel_name_pattern):
                 name = archive_details['name']
-                start_time = datetime_for_seconds_and_nanoseconds(archive_details['start_sec'], archive_details['start_nano'])
-                end_time = datetime_for_seconds_and_nanoseconds(archive_details['end_sec'], archive_details['end_nano'])
+                start_time = utils.datetime_for_seconds_and_nanoseconds(archive_details['start_sec'], archive_details['start_nano'])
+                end_time = utils.datetime_for_seconds_and_nanoseconds(archive_details['end_sec'], archive_details['end_nano'])
                 archive_properties = ArchiveProperties(archive_key, start_time, end_time)
                 if list_emptied_for_channel[name]:
                     self.archives_for_name[name].append(archive_properties)
@@ -111,8 +96,8 @@ class Archiver(object):
                 archive_keys = [ archive_keys ]
 
         # Convert datetimes to seconds and nanoseconds for archiver request
-        start_seconds, start_nanoseconds = seconds_and_nanoseconds_from_datetime(start_datetime)
-        end_seconds, end_nanoseconds = seconds_and_nanoseconds_from_datetime(end_datetime)
+        start_seconds, start_nanoseconds = utils.seconds_and_nanoseconds_from_datetime(start_datetime)
+        end_seconds, end_nanoseconds = utils.seconds_and_nanoseconds_from_datetime(end_datetime)
 
         if scan_archives:
             self.scan_archives(channel_names)
@@ -125,7 +110,7 @@ class Archiver(object):
                 if channel_name not in self.archives_for_name:
                     raise Exception('Channel {} not found in any archive.'.format(channel_name))
                 for archive_key, archive_start_time, archive_end_time in self.archives_for_name[channel_name]:
-                    overlap = overlap_between_datetime_ranges(start_datetime, end_datetime, archive_start_time, archive_end_time)
+                    overlap = utils.overlap_between_datetime_ranges(start_datetime, end_datetime, archive_start_time, archive_end_time)
                     if overlap > greatest_overlap:
                         key_with_greatest_overlap = archive_key
                         greatest_overlap = overlap
