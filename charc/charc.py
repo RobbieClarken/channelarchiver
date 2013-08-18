@@ -30,15 +30,22 @@ class ChannelData(object):
     channel: The channel name.
     values: A list of channel values.
     time: A list of datetimes corresponding with the retrieved times.
-    status: A list of status values corresponding with the retrieved times.
-    severity: A list of severity values corresponding with the retrieved times.
+    status: A list of status values corresponding with the retrieved
+        times.
+    severity: A list of severity values corresponding with the
+        retrieved times.
     units: The units of the values.
-    states: A list of strings describing the states a STRING or ENUM can take.
+    states: A list of strings describing the states a STRING or ENUM
+        can have.
     data_type: The data type of the channel.
-    display_limits: Values advising how to display the values in a user interface.
-    warn_limits: Low and high values for which the channel will generate a warning.
-    alarm_limits: Low and high values for which the channel will generate an alarm.
-    display_precision: The number of decimal places to show in user interfaces.
+    display_limits: Values advising how to display the values in a user
+        interface.
+    warn_limits: Low and high values for which the channel will
+        generate a warning.
+    alarm_limits: Low and high values for which the channel will
+        generate an alarm.
+    display_precision: The number of decimal places to show in user
+        interfaces.
     archive_key: The archive the data was pulled from.
     '''
 
@@ -106,9 +113,9 @@ class Archiver(object):
     
     def scan_archives(self, channels=None):
         '''
-        Determine which archives contain the specified channels. This can
-        be called prior to calling .get() with scan_archives=False to speed
-        up data retrieval.
+        Determine which archives contain the specified channels. This
+        can be called prior to calling .get() with scan_archives=False
+        to speed up data retrieval.
         
         channels: (optional) The channel names to scan for. Can be a
             string or list of strings.
