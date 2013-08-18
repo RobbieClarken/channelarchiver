@@ -6,10 +6,11 @@ except ImportError: # Python 3
     from xmlrpc.client import Server
 
 import collections
-import itertools
+from itertools import groupby
 
 from . import codes
 from . import utils
+from .exceptions import ChannelNotFound, ChannelKeyMismatch
 
 try:
     StrType = basestring
@@ -211,20 +212,24 @@ class Archiver(object):
                         key_with_greatest_overlap = archive_key
                         greatest_overlap = overlap
                 if key_with_greatest_overlap is None:
-                    raise Exception('Channel {} not found in any archive.'.format(channel))
+                    raise ChannelNotFound(('Channel {0} not found in '
+                                           'any archive (an archive scan '
+                                           'may be needed).').format(channel))
                 channels_for_key[key_with_greatest_overlap].append(channel)
         else:
-            if len(channels) != len(archive_keys):
-                    raise Exception('Number of archive keys ({}) must equal number of channels ({}).'.format(len(archive_keys), len(channels)))
             # Group by archive key so we can request multiple channels
             # with a single query
-            key_for_channel = dict(zip(channels, archive_keys))
-            sorted_channels = sorted(channels, key=key_for_channel.__getitem__)
-            group_by_iter = itertools.groupby(sorted_channels,
-                                              key=key_for_channel.__getitem__)
-            channels_for_key = dict(
-                    (key, list(value)) for key, value in group_by_iter
-            )
+            try:
+                key_for_channel = dict(zip(channels, archive_keys))
+                group_func = key_for_channel.__getitem__
+                sorted_channels = sorted(channels, key=group_func)
+                group_by_iter = groupby(sorted_channels, key=group_func)
+                channels_for_key = dict(
+                        (key, list(value)) for key, value in group_by_iter
+                )
+            except KeyError:
+                raise ChannelKeyMismatch('Number of archive keys must '
+                                         'equal number of channels.')
         
         return_data = [ None ] * len(channels)
         
