@@ -22,7 +22,7 @@ def utc_if_no_tzinfo(dt):
     return dt.replace(tzinfo=UTC()) if dt.tzinfo is None else dt
 
 
-def datetime_from_seconds_and_nanoseconds(seconds, nanoseconds=0.0, tz=None):
+def datetime_from_sec_and_nano(seconds, nanoseconds=0.0, tz=None):
     '''
     Convert seconds and nanoseconds since the Epoch into a datetime with given timezone.
     If tz is not specified, UTC will be used.
@@ -34,7 +34,7 @@ def datetime_from_seconds_and_nanoseconds(seconds, nanoseconds=0.0, tz=None):
     return datetime.datetime.fromtimestamp(timestamp, tz)
 
 
-def seconds_and_nanoseconds_from_datetime(dt):
+def sec_and_nano_from_datetime(dt):
     '''
     Convert a datetime to seconds and nanoseconds since the Epoch.
     '''
@@ -43,7 +43,7 @@ def seconds_and_nanoseconds_from_datetime(dt):
     return seconds, nanoseconds
 
 
-def overlap_between_datetime_ranges(first_range_start, first_range_end,
+def overlap_between_intervals(first_range_start, first_range_end,
                                     second_range_start, second_range_end):
 
     first_range_start = utc_if_no_tzinfo(first_range_start)
