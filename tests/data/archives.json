@@ -1,0 +1,162 @@
+{
+  "1001": {
+    "name": "Short term Diagnostics Control",
+    "path": "/asp/arc/ring/dia/short_term_dir/index",
+    "data": {
+      "SR11BCM01:CURRENT_MONITOR": {
+        "count": 1,
+        "meta": {
+          "alarm_high": 220.0,
+          "alarm_low": 0.0,
+          "disp_high": 200.0,
+          "disp_low": 0.0,
+          "prec": 3,
+          "type": 1,
+          "units": "mA",
+          "warn_high": 210.0,
+          "warn_low": 0.0
+        },
+        "name": "SR11BCM01:CURRENT_MONITOR",
+        "type": 3,
+        "values": [
+          {
+            "nano": 432589140,
+            "secs": 1376146823,
+            "sevr": 0,
+            "stat": 0,
+            "value": [
+              200.5232408578072
+            ]
+          },
+          {
+            "nano": 811001000,
+            "secs": 1376146823,
+            "sevr": 0,
+            "stat": 0,
+            "value": [
+              200.5232408578072
+            ]
+          },
+          {
+            "nano": 434604647,
+            "secs": 1376146825,
+            "sevr": 0,
+            "stat": 0,
+            "value": [
+              200.518373810611
+            ]
+          }
+        ]
+      },
+      "SR11BCM01:LIFETIME_MONITOR": {
+        "count": 1,
+        "meta": {
+          "alarm_high": 0.0,
+          "alarm_low": 0.0,
+          "disp_high": 160.0,
+          "disp_low": 0.0,
+          "prec": 2,
+          "type": 1,
+          "units": "Hrs",
+          "warn_high": 0.0,
+          "warn_low": 0.0
+        },
+        "name": "SR11BCM01:LIFETIME_MONITOR",
+        "type": 3,
+        "values": [
+          {
+            "nano": 129599795,
+            "secs": 1376767071,
+            "sevr": 0,
+            "stat": 0,
+            "value": [
+              0.0
+            ]
+          },
+          {
+            "nano": 557222630,
+            "secs": 1376787353,
+            "sevr": 0,
+            "stat": 0,
+            "value": [
+              359.1288755163723
+            ]
+          },
+          {
+            "nano": 558211062,
+            "secs": 1376787354,
+            "sevr": 0,
+            "stat": 0,
+            "value": [
+              118.1422092766749
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "1108": {
+    "name": "Long term Timing Control",
+    "path": "/asp/arc/ring/tim/long_term_dir/index",
+    "data": {
+      "TS01FPC01:FILL_CMD": {
+        "count": 1,
+        "meta": {
+          "states": [
+            "No Action",
+            "Stop",
+            "Continuous",
+            "One Shot",
+            "Pattern Fill",
+            "Pattern Resume",
+            "Next Shot",
+            "Top Up",
+            "Recovery",
+            "Periodic"
+          ],
+          "type": 0
+        },
+        "name": "TS01FPC01:FILL_CMD",
+        "type": 1,
+        "values": [
+          {
+            "nano": 765675810,
+            "secs": 1375324840,
+            "sevr": 0,
+            "stat": 0,
+            "value": [
+              7
+            ]
+          },
+          {
+            "nano": 414257465,
+            "secs": 1375367523,
+            "sevr": 0,
+            "stat": 0,
+            "value": [
+              1
+            ]
+          },
+          {
+            "nano": 623788581,
+            "secs": 1375367578,
+            "sevr": 0,
+            "stat": 0,
+            "value": [
+              8
+            ]
+          },
+          {
+            "nano": 966289428,
+            "secs": 1375367594,
+            "sevr": 0,
+            "stat": 0,
+            "value": [
+              7
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

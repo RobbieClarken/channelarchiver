@@ -47,3 +47,23 @@ class data_type(object):
     ENUM = 1
     INT = 2
     DOUBLE = 2
+
+class xmlrpc(object):
+    UNSPECIFIED = 0
+    INTERNAL = -500
+    TYPE = -501
+    INDEX = -502
+    PARSE = -503
+    NETWORK = -504
+    TIMEOUT = -505
+    NO_SUCH_METHOD = -506
+    REQUEST_REFUSED = -507
+    INTROSPECTION_DISABLED = -508
+    LIMIT_EXCEEDED = -509
+    INVALID_UTF8 = -510
+
+class archiver(object):
+    SEVER_FAULT = -600
+    NO_INDEX = -601
+    ARGUMENT_ERROR = -602
+    DATA_ERROR = -603

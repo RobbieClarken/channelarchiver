@@ -1,0 +1,91 @@
+{
+  "desc": "Channel Archiver Data Server V0,\nfor EPICS 3.14.12.3,\nbuilt Jul  7 2013, 11:32:25\nfrom sources for version 2.9.2\nConfig: '/asp/ics/CR01ARC01/configuration/serverconfig.xml'\n",
+  "how": [
+    "raw",
+    "spreadsheet",
+    "average",
+    "plot-binning",
+    "linear"
+  ],
+  "sevr": [
+    {
+      "has_value": true,
+      "num": 0,
+      "sevr": "NO_ALARM",
+      "txt_stat": true
+    },
+    {
+      "has_value": true,
+      "num": 1,
+      "sevr": "MINOR",
+      "txt_stat": true
+    },
+    {
+      "has_value": true,
+      "num": 2,
+      "sevr": "MAJOR",
+      "txt_stat": true
+    },
+    {
+      "has_value": true,
+      "num": 3,
+      "sevr": "INVALID",
+      "txt_stat": true
+    },
+    {
+      "has_value": true,
+      "num": 3968,
+      "sevr": "Est_Repeat",
+      "txt_stat": false
+    },
+    {
+      "has_value": true,
+      "num": 3856,
+      "sevr": "Repeat",
+      "txt_stat": false
+    },
+    {
+      "has_value": false,
+      "num": 3904,
+      "sevr": "Disconnected",
+      "txt_stat": true
+    },
+    {
+      "has_value": false,
+      "num": 3872,
+      "sevr": "Archive_Off",
+      "txt_stat": true
+    },
+    {
+      "has_value": false,
+      "num": 3848,
+      "sevr": "Archive_Disabled",
+      "txt_stat": true
+    }
+  ],
+  "stat": [
+    "NO_ALARM",
+    "READ",
+    "WRITE",
+    "HIHI",
+    "HIGH",
+    "LOLO",
+    "LOW",
+    "STATE",
+    "COS",
+    "COMM",
+    "TIMEOUT",
+    "HWLIMIT",
+    "CALC",
+    "SCAN",
+    "LINK",
+    "SOFT",
+    "BAD_SUB",
+    "UDF",
+    "DISABLE",
+    "SIMM",
+    "READ_ACCESS",
+    "WRITE_ACCESS"
+  ],
+  "ver": 0
+}
