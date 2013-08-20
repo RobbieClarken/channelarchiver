@@ -3,7 +3,7 @@
     "name": "Short term Diagnostics Control",
     "path": "/asp/arc/ring/dia/short_term_dir/index",
     "data": {
-      "SR11BCM01:CURRENT_MONITOR": {
+      "EXAMPLE:DOUBLE_SCALAR": {
         "count": 1,
         "meta": {
           "alarm_high": 220.0,
@@ -16,90 +16,99 @@
           "warn_high": 210.0,
           "warn_low": 0.0
         },
-        "name": "SR11BCM01:CURRENT_MONITOR",
+        "name": "EXAMPLE:DOUBLE_SCALAR",
         "type": 3,
         "values": [
           {
-            "nano": 432589140,
-            "secs": 1376146823,
+            "nano": 663999895,
+            "secs": 1342129643,
             "sevr": 0,
             "stat": 0,
             "value": [
-              200.5232408578072
+              200.5
             ]
           },
           {
-            "nano": 811001000,
-            "secs": 1376146823,
+            "nano": 443588732,
+            "secs": 1342145101,
             "sevr": 0,
             "stat": 0,
             "value": [
-              200.5232408578072
+              199.9
             ]
           },
           {
-            "nano": 434604647,
-            "secs": 1376146825,
+            "nano": 806097162,
+            "secs": 1342163971,
             "sevr": 0,
             "stat": 0,
             "value": [
-              200.518373810611
+              198.7
+            ]
+          },
+          {
+            "nano": 671259311,
+            "secs": 1342178335,
+            "sevr": 0,
+            "stat": 0,
+            "value": [
+              196.1
             ]
           }
         ]
       },
-      "SR11BCM01:LIFETIME_MONITOR": {
-        "count": 1,
+      "EXAMPLE:INT_WAVEFORM": {
+        "count": 3,
         "meta": {
           "alarm_high": 0.0,
           "alarm_low": 0.0,
-          "disp_high": 160.0,
+          "disp_high": 20.0,
           "disp_low": 0.0,
-          "prec": 2,
+          "prec": 0,
           "type": 1,
-          "units": "Hrs",
+          "units": "",
           "warn_high": 0.0,
           "warn_low": 0.0
         },
-        "name": "SR11BCM01:LIFETIME_MONITOR",
-        "type": 3,
+        "name": "EXAMPLE:INT_WAVEFORM",
+        "type": 2,
         "values": [
           {
             "nano": 129599795,
-            "secs": 1376767071,
+            "secs": 1342134859,
             "sevr": 0,
             "stat": 0,
             "value": [
-              0.0
+              3, 5, 13
             ]
           },
           {
             "nano": 557222630,
-            "secs": 1376787353,
+            "secs": 1342143112,
             "sevr": 0,
             "stat": 0,
             "value": [
-              359.1288755163723
+              2, 4, 11
             ]
           },
           {
             "nano": 558211062,
-            "secs": 1376787354,
+            "secs": 1342167978,
             "sevr": 0,
             "stat": 0,
             "value": [
-              118.1422092766749
+              0, 7, 1
             ]
           }
         ]
       }
     }
   },
-  "1108": {
-    "name": "Long term Timing Control",
+  "1008": {
+    "name": "Short term Timing Control",
     "path": "/asp/arc/ring/tim/long_term_dir/index",
     "data": {
-      "TS01FPC01:FILL_CMD": {
+      "EXAMPLE:ENUM_SCALAR": {
         "count": 1,
         "meta": {
           "states": [
@@ -116,12 +125,12 @@
           ],
           "type": 0
         },
-        "name": "TS01FPC01:FILL_CMD",
+        "name": "EXAMPLE:ENUM_SCALAR",
         "type": 1,
         "values": [
           {
             "nano": 765675810,
-            "secs": 1375324840,
+            "secs": 1342132870,
             "sevr": 0,
             "stat": 0,
             "value": [
@@ -130,7 +139,7 @@
           },
           {
             "nano": 414257465,
-            "secs": 1375367523,
+            "secs": 1342149342,
             "sevr": 0,
             "stat": 0,
             "value": [
@@ -139,20 +148,11 @@
           },
           {
             "nano": 623788581,
-            "secs": 1375367578,
+            "secs": 1342171223,
             "sevr": 0,
             "stat": 0,
             "value": [
               8
-            ]
-          },
-          {
-            "nano": 966289428,
-            "secs": 1375367594,
-            "sevr": 0,
-            "stat": 0,
-            "value": [
-              7
             ]
           }
         ]

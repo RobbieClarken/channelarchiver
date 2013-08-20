@@ -4,7 +4,7 @@ import os
 import json
 import re
 from xmlrpclib import Fault, ProtocolError
-from charc import codes
+from charc import codes, utils
 
 tests_dir =  os.path.dirname(os.path.realpath(__file__))
 data_dir = os.path.join(tests_dir, 'data')
@@ -23,6 +23,25 @@ def check_type(value, check_type, expected_name):
 class MockArchiver(object):
     '''
     A mock class to simulate XML-RPC calls to a Channel Archiver.
+
+    Loads data for a mock archiver with the following archives and
+    channels:
+    
+    1001
+        * EXAMPLE:DOUBLE_SCALAR
+            - 2012-07-12 21:47:23.663999895: 200.5
+            - 2012-07-13 02:05:01.443588732: 199.9
+            - 2012-07-13 07:19:31.806097162: 198.7
+            - 2012-07-13 11:18:55.671259311: 196.1
+        * EXAMPLE:INT_WAVEFORM
+            - 2012-07-12 23:14:19.129599795: [3, 5, 13]
+            - 2012-07-13 01:31:52.557222630: [2, 4, 11]
+            - 2012-07-13 08:26:18.558211062: [0, 7, 1]
+    1008
+        * EXAMPLE:ENUM_SCALAR
+            - 2012-07-12 22:41:10.765675810: 7
+            - 2012-07-13 03:15:42.414257465: 1
+            - 2012-07-13 09:20:23.623788581: 8
     '''
     _archives = read_data('archives')
     _info = read_data('info')
@@ -82,13 +101,26 @@ class MockArchiver(object):
         if not 0 <= interpolation <= 4:
             raise Fault(codes.archiver.ARGUMENT_ERROR,
                         'Invalid how={0}'.format(interpolation))
+        if interpolation != 0:
+            raise Exception('Only raw interpolation is supported by'
+                            'MockArchiver.')
         key = str(key)
         self._check_key(key)
         archive_data = self._archives[key]['data']
         return_data = []
+
+        start = start_sec + 1e-9 * start_nano
+        end = end_sec + 1e-9 * end_nano
+
         for channel in channels:
             try:
-                channel_data = archive_data[channel]
+                channel_data = archive_data[channel].copy()
+                channel_values = channel_data['values']
+                for index, value in enumerate(channel_values):
+                   time = value['secs'] + 1e-9 * value['nano']
+                   if not start <= time <= end:
+                       channel_values.pop(index)
+                del channel_values[count:]
             except KeyError:
                 channel_data = {
                     'count': 1,

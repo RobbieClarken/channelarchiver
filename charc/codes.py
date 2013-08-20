@@ -46,7 +46,7 @@ class data_type(object):
     STRING = 0
     ENUM = 1
     INT = 2
-    DOUBLE = 2
+    DOUBLE = 3
 
 class xmlrpc(object):
     UNSPECIFIED = 0
