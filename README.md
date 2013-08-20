@@ -14,8 +14,5 @@ You then fetch data with the `archiver.get()` method:
 >>> end = datetime.datetime(2013, 8, 12)
 >>> data = archiver.get('SR00IE01:INJECTION_EFFICIENCY_MONITOR', start, end)
 >>> data.values
-[96.935,
- 94.517,
- ...
- 97.253]
+[96.935, 94.517, ..., 97.253]
 ```
