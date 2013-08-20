@@ -30,15 +30,16 @@ class ChannelData(object):
     Fields:
     channel: The channel name.
     values: A list of channel values.
-    time: A list of datetimes corresponding with the retrieved times.
-    status: A list of status values corresponding with the retrieved
+    times: A list of datetimes corresponding with the retrieved times.
+    statuses: A list of status values corresponding with the retrieved
         times.
-    severity: A list of severity values corresponding with the
+    severities: A list of severity values corresponding with the
         retrieved times.
     units: The units of the values.
     states: A list of strings describing the states a STRING or ENUM
         can have.
     data_type: The data type of the channel.
+    elements: The number of elements per sample for waveform channels.
     display_limits: Values advising how to display the values in a user
         interface.
     warn_limits: Low and high values for which the channel will
@@ -57,7 +58,7 @@ class ChannelData(object):
         self.archive_key = archive_key
         self.channel = archive_data['name']
         self.data_type = archive_data['type']
-        self.elements_per_sample = archive_data['count']
+        self.elements = elements = archive_data['count']
 
         meta_data = archive_data['meta']
         if meta_data['type'] == 0:
@@ -78,23 +79,21 @@ class ChannelData(object):
             self.display_precision = meta_data['prec']
             self.units = meta_data['units']
 
-        status = []
-        severity = []
-        time = []
+        statuses = []
+        severities = []
+        times = []
         values = []
         for sample in archive_data['values']:
-            if self.elements_per_sample == 1:
-                values.append(sample['value'][0])
-            else:
-                values.append(sample['value'])
-            status.append(sample['stat'])
-            severity.append(sample['sevr'])
-            time.append(utils.datetime_from_sec_and_nano(sample['secs'],
+            value = sample['value'][0] if elements == 1 else sample['value']
+            values.append(value)
+            statuses.append(sample['stat'])
+            severities.append(sample['sevr'])
+            times.append(utils.datetime_from_sec_and_nano(sample['secs'],
                                                          sample['nano'],
                                                          tz))
-        self.status = status
-        self.severity = severity
-        self.time = time
+        self.statuses = statuses
+        self.severity = severities
+        self.times = times
         self.values = values
 
 

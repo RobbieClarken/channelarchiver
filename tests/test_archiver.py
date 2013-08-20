@@ -46,9 +46,9 @@ class TestArchiver(unittest.TestCase):
         channel_data = data[0]
         self.assertEqual(channel_data.channel, 'EXAMPLE:DOUBLE_SCALAR')
         self.assertEqual(channel_data.data_type, codes.data_type.DOUBLE)
-        self.assertEqual(channel_data.elements_per_sample, 1)
+        self.assertEqual(channel_data.elements, 1)
         self.assertEqual(channel_data.values, [ 200.5, 199.9, 198.7, 196.1 ])
-        self.assertEqual(channel_data.time, [
+        self.assertEqual(channel_data.times, [
             datetime.datetime(2012, 7, 12, 21, 47, 23, 664000, utc),
             datetime.datetime(2012, 7, 13, 02, 05, 01, 443589, utc),
             datetime.datetime(2012, 7, 13, 07, 19, 31, 806097, utc),
@@ -78,7 +78,7 @@ class TestArchiver(unittest.TestCase):
         channel_data = self.archiver.get('EXAMPLE:DOUBLE_SCALAR', start, end,
                                          interpolation=codes.interpolate.RAW)
         self.assertEqual(channel_data.values, [ 199.9, 198.7 ])
-        self.assertEqual(channel_data.time, [
+        self.assertEqual(channel_data.times, [
             datetime.datetime(2012, 7, 13, 02, 05, 01, 443589, utc),
             datetime.datetime(2012, 7, 13, 07, 19, 31, 806097, utc)
         ])
@@ -91,7 +91,7 @@ class TestArchiver(unittest.TestCase):
                             interpolation=codes.interpolate.RAW)
         self.assertEqual(channel_data.channel, 'EXAMPLE:INT_WAVEFORM')
         self.assertEqual(channel_data.data_type, codes.data_type.INT)
-        self.assertEqual(channel_data.elements_per_sample, 3)
+        self.assertEqual(channel_data.elements, 3)
         self.assertEqual(channel_data.values, [
             [3, 5, 13],
             [2, 4, 11],
