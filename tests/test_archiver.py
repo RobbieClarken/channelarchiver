@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from charc import Archiver, ChannelData, codes, utils, exceptions
+from channelarchiver import Archiver, ChannelData, codes, utils, exceptions
 from mock_archiver import MockArchiver
 import datetime
 

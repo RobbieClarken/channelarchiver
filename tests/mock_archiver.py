@@ -4,7 +4,7 @@ import os
 import json
 import re
 from xmlrpclib import Fault, ProtocolError
-from charc import codes, utils
+from channelarchiver import codes, utils
 
 tests_dir =  os.path.dirname(os.path.realpath(__file__))
 data_dir = os.path.join(tests_dir, 'data')

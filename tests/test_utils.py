@@ -5,7 +5,7 @@ from __future__ import absolute_import
 
 import unittest
 import datetime
-from charc import utils
+from channelarchiver import utils
 
 class AEST(datetime.tzinfo):
 
