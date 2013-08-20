@@ -83,12 +83,15 @@ class ChannelData(object):
         time = []
         values = []
         for sample in archive_data['values']:
+            if self.elements_per_sample == 1:
+                values.append(sample['value'][0])
+            else:
+                values.append(sample['value'])
             status.append(sample['stat'])
             severity.append(sample['sevr'])
             time.append(utils.datetime_from_sec_and_nano(sample['secs'],
                                                          sample['nano'],
                                                          tz))
-            values.append(sample['value'])
         self.status = status
         self.severity = severity
         self.time = time
@@ -219,22 +222,21 @@ class Archiver(object):
         else:
             # Group by archive key so we can request multiple channels
             # with a single query
-            try:
-                key_for_channel = dict(zip(channels, archive_keys))
-                group_func = key_for_channel.__getitem__
-                sorted_channels = sorted(channels, key=group_func)
-                group_by_iter = groupby(sorted_channels, key=group_func)
-                channels_for_key = dict(
-                        (key, list(value)) for key, value in group_by_iter
-                )
-            except KeyError:
+            if len(channels) != len(archive_keys):
                 raise ChannelKeyMismatch('Number of archive keys must '
                                          'equal number of channels.')
+            key_for_channel = dict(zip(channels, archive_keys))
+            group_func = key_for_channel.__getitem__
+            sorted_channels = sorted(channels, key=group_func)
+            group_by_iter = groupby(sorted_channels, key=group_func)
+            channels_for_key = dict(
+                    (key, list(value)) for key, value in group_by_iter
+            )
         
         return_data = [ None ] * len(channels)
         
         for archive_key, channels_on_archive in channels_for_key.iteritems():
-            data = self.archiver.values(archive_key, channels,
+            data = self.archiver.values(archive_key, channels_on_archive,
                                         start_sec, start_nano,
                                         end_sec, end_nano,
                                         count, interpolation)

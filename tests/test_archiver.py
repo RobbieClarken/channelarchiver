@@ -46,7 +46,8 @@ class TestArchiver(unittest.TestCase):
         channel_data = data[0]
         self.assertEqual(channel_data.channel, 'EXAMPLE:DOUBLE_SCALAR')
         self.assertEqual(channel_data.data_type, codes.data_type.DOUBLE)
-        self.assertEqual(channel_data.values, [ [200.5], [199.9], [198.7], [196.1]])
+        self.assertEqual(channel_data.elements_per_sample, 1)
+        self.assertEqual(channel_data.values, [ 200.5, 199.9, 198.7, 196.1 ])
         self.assertEqual(channel_data.time, [
             datetime.datetime(2012, 7, 12, 21, 47, 23, 664000, utc),
             datetime.datetime(2012, 7, 13, 02, 05, 01, 443589, utc),
@@ -76,7 +77,7 @@ class TestArchiver(unittest.TestCase):
         end = datetime.datetime(2012, 7, 13, 10)
         channel_data = self.archiver.get('EXAMPLE:DOUBLE_SCALAR', start, end,
                                          interpolation=codes.interpolate.RAW)
-        self.assertEqual(channel_data.values, [ [199.9], [198.7] ])
+        self.assertEqual(channel_data.values, [ 199.9, 198.7 ])
         self.assertEqual(channel_data.time, [
             datetime.datetime(2012, 7, 13, 02, 05, 01, 443589, utc),
             datetime.datetime(2012, 7, 13, 07, 19, 31, 806097, utc)
@@ -90,11 +91,51 @@ class TestArchiver(unittest.TestCase):
                             interpolation=codes.interpolate.RAW)
         self.assertEqual(channel_data.channel, 'EXAMPLE:INT_WAVEFORM')
         self.assertEqual(channel_data.data_type, codes.data_type.INT)
+        self.assertEqual(channel_data.elements_per_sample, 3)
         self.assertEqual(channel_data.values, [
             [3, 5, 13],
             [2, 4, 11],
             [0, 7, 1]
         ])
+
+    def test_get_enum(self):
+        start = datetime.datetime(2012, 1, 1)
+        end = datetime.datetime(2013, 1, 1)
+        channel_data = self.archiver.get(
+                            'EXAMPLE:ENUM_SCALAR', start, end,
+                            interpolation=codes.interpolate.RAW)
+        self.assertEqual(channel_data.channel, 'EXAMPLE:ENUM_SCALAR')
+        self.assertEqual(channel_data.data_type, codes.data_type.ENUM)
+        self.assertEqual(channel_data.values, [7, 1, 8])
+
+    def test_get_multiple(self):
+        start = datetime.datetime(2012, 1, 1)
+        end = datetime.datetime(2013, 1, 1)
+        data = self.archiver.get(
+                ['EXAMPLE:DOUBLE_SCALAR',
+                 'EXAMPLE:INT_WAVEFORM',
+                 'EXAMPLE:ENUM_SCALAR'],
+                start, end,
+                interpolation=codes.interpolate.RAW)
+        self.assertTrue(isinstance(data, list))
+        self.assertEqual(data[0].channel, 'EXAMPLE:DOUBLE_SCALAR')
+        self.assertEqual(data[1].channel, 'EXAMPLE:INT_WAVEFORM')
+        self.assertEqual(data[2].channel, 'EXAMPLE:ENUM_SCALAR')
+        self.assertEqual(data[0].values, [ 200.5, 199.9, 198.7, 196.1 ])
+        self.assertEqual(data[1].values, [[3, 5, 13],
+                                          [2, 4, 11],
+                                          [0, 7, 1]])
+        self.assertEqual(data[2].values, [7, 1, 8])
+
+    def test_get_with_wrong_number_of_keys(self):
+        start = datetime.datetime(2012, 1, 1)
+        end = datetime.datetime(2013, 1, 1)
+        with self.assertRaises(exceptions.ChannelKeyMismatch):
+            self.archiver.get(
+                [ 'EXAMPLE:DOUBLE_SCALAR' ],
+                start, end,
+                archive_keys=[1001, 1008],
+                interpolation=codes.interpolate.RAW)
 
 if __name__ == '__main__':
     unittest.main()
