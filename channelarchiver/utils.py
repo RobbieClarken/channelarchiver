@@ -30,7 +30,7 @@ def datetime_from_sec_and_nano(seconds, nanoseconds=0, tz=None):
     '''
     if tz is None:
         tz = UTC()
-    # We create the datetime this in two steps to avoid the weird
+    # We create the datetime in two steps to avoid the weird
     # microsecond rounding behaviour in Python 3.
     dt = datetime.datetime.fromtimestamp(seconds, tz)
     return dt.replace(microsecond=int(round(1.e-3 * nanoseconds)))
