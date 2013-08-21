@@ -234,7 +234,7 @@ class Archiver(object):
         
         return_data = [ None ] * len(channels)
         
-        for archive_key, channels_on_archive in channels_for_key.iteritems():
+        for archive_key, channels_on_archive in channels_for_key.items():
             data = self.archiver.values(archive_key, channels_on_archive,
                                         start_sec, start_nano,
                                         end_sec, end_nano,

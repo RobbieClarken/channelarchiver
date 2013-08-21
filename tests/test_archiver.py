@@ -3,7 +3,7 @@
 
 import unittest
 from channelarchiver import Archiver, ChannelData, codes, utils, exceptions
-from mock_archiver import MockArchiver
+from .mock_archiver import MockArchiver
 import datetime
 
 utc = utils.UTC()

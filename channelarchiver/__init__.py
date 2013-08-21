@@ -24,4 +24,4 @@ __version__ = '.'.join(map(str, __version_info__))
 __license__ = 'MIT'
 
 from .channelarchiver import Archiver, ChannelData
-import codes
+from . import codes

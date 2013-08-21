@@ -22,7 +22,7 @@ def utc_if_no_tzinfo(dt):
     return dt.replace(tzinfo=UTC()) if dt.tzinfo is None else dt
 
 
-def datetime_from_sec_and_nano(seconds, nanoseconds=0.0, tz=None):
+def datetime_from_sec_and_nano(seconds, nanoseconds=0, tz=None):
     '''
     Convert seconds and nanoseconds since the Epoch into a datetime with given timezone.
     If tz is not specified, UTC will be used.
@@ -30,8 +30,10 @@ def datetime_from_sec_and_nano(seconds, nanoseconds=0.0, tz=None):
     '''
     if tz is None:
         tz = UTC()
-    timestamp = seconds + 1.e-9 * nanoseconds
-    return datetime.datetime.fromtimestamp(timestamp, tz)
+    # We create the datetime this in two steps to avoid the weird
+    # microsecond rounding behaviour in Python 3.
+    dt = datetime.datetime.fromtimestamp(seconds, tz)
+    return dt.replace(microsecond=int(round(1.e-3 * nanoseconds)))
 
 
 def sec_and_nano_from_datetime(dt):
