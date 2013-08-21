@@ -50,8 +50,8 @@ class TestArchiver(unittest.TestCase):
         self.assertEqual(channel_data.values, [ 200.5, 199.9, 198.7, 196.1 ])
         self.assertEqual(channel_data.times, [
             datetime.datetime(2012, 7, 12, 21, 47, 23, 664000, utc),
-            datetime.datetime(2012, 7, 13, 02, 05, 01, 443589, utc),
-            datetime.datetime(2012, 7, 13, 07, 19, 31, 806097, utc),
+            datetime.datetime(2012, 7, 13, 2, 5, 1, 443589, utc),
+            datetime.datetime(2012, 7, 13, 7, 19, 31, 806097, utc),
             datetime.datetime(2012, 7, 13, 11, 18, 55, 671259, utc)
         ])
 
@@ -80,8 +80,8 @@ class TestArchiver(unittest.TestCase):
                                          interpolation=codes.interpolate.RAW)
         self.assertEqual(channel_data.values, [ 199.9, 198.7 ])
         self.assertEqual(channel_data.times, [
-            datetime.datetime(2012, 7, 13, 02, 05, 01, 443589, utc),
-            datetime.datetime(2012, 7, 13, 07, 19, 31, 806097, utc)
+            datetime.datetime(2012, 7, 13, 2, 5, 1, 443589, utc),
+            datetime.datetime(2012, 7, 13, 7, 19, 31, 806097, utc)
         ])
 
     def test_get_waveform(self):
