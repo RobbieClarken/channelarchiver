@@ -67,10 +67,11 @@ class TestArchiver(unittest.TestCase):
     def test_get_without_scan(self):
         start = datetime.datetime(2012, 1, 1)
         end = datetime.datetime(2013, 1, 1)
-        with self.assertRaises(exceptions.ChannelNotFound):
-            data = self.archiver.get(['EXAMPLE:DOUBLE_SCALAR'], start, end,
-                                     interpolation=codes.interpolate.RAW,
-                                     scan_archives=False)
+        self.assertRaises(exceptions.ChannelNotFound,
+                          self.archiver.get, ['EXAMPLE:DOUBLE_SCALAR'],
+                          start, end,
+                          interpolation=codes.interpolate.RAW,
+                          scan_archives=False)
 
     def test_get_with_restrictive_interval(self):
         start = datetime.datetime(2012, 7, 13)
@@ -130,12 +131,12 @@ class TestArchiver(unittest.TestCase):
     def test_get_with_wrong_number_of_keys(self):
         start = datetime.datetime(2012, 1, 1)
         end = datetime.datetime(2013, 1, 1)
-        with self.assertRaises(exceptions.ChannelKeyMismatch):
-            self.archiver.get(
-                [ 'EXAMPLE:DOUBLE_SCALAR' ],
-                start, end,
-                archive_keys=[1001, 1008],
-                interpolation=codes.interpolate.RAW)
+        self.assertRaises(exceptions.ChannelKeyMismatch,
+                          self.archiver.get,
+                          [ 'EXAMPLE:DOUBLE_SCALAR' ],
+                          start, end,
+                          archive_keys=[1001, 1008],
+                          interpolation=codes.interpolate.RAW)
 
 if __name__ == '__main__':
     unittest.main()

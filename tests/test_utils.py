@@ -16,7 +16,7 @@ class AEST(datetime.tzinfo):
         return datetime.timedelta(0)
 
 
-class TestUtilFunctions(unittest.TestCase):
+class TestUtils(unittest.TestCase):
 
     def test_datetime_from_sec_and_nano(self):
         seconds = 1376706013
