@@ -15,6 +15,28 @@ class AEST(datetime.tzinfo):
 
 
 class TestUtils(unittest.TestCase):
+    def test_utc(self):
+        tz = utils.UTC()
+        self.assertEqual(tz.tzname(), 'UTC')
+        self.assertEqual(repr(tz), 'UTC()')
+
+    def test_utc_with_offset(self):
+        hours = 6 + 3./60.
+        tz = utils.UTC(hours)
+        self.assertEqual(tz.tzname(), 'UTC+06:03')
+        self.assertEqual(repr(tz), 'UTC(6.05)')
+
+    def test_utc_with_negative_offset(self):
+        hours = - (6 + 45./60.)
+        tz = utils.UTC(hours)
+        self.assertEqual(tz.tzname(), 'UTC-06:45')
+        self.assertEqual(repr(tz), 'UTC(-6.75)')
+
+    def test_utc_with_offset_seconds(self):
+        hours = 23 + 15./60. + 8./3600.
+        tz = utils.UTC(hours)
+        self.assertEqual(tz.tzname(), 'UTC+23:15:08')
+        self.assertEqual(repr(tz), 'UTC(23.252222)')
 
     def test_datetime_from_sec_and_nano(self):
         seconds = 1376706013
@@ -93,6 +115,42 @@ class TestUtils(unittest.TestCase):
                                                         second_range_start,
                                                         second_range_end)
         self.assertEqual(overlap, datetime.timedelta(hours=1))
+
+    def test_pretty_list_repr(self):
+        lst = [ 8,  3,  3, 14,  4,  4,  6,  5, 14,
+                9, 13,  2, 18, 10,  4, 15, 12]
+        self.assertEqual(utils.pretty_list_repr(lst, max_line_len=40),
+                         ('[ 8,  3,  3, 14,  4,  4,  6,  5, 14,  9,\n'
+                          ' 13,  2, 18, 10,  4, 15, 12]'))
+
+    def test_pretty_list_repr_no_wrap(self):
+        lst = [ 8,  3,  3, 14,  4,  4,  6,  5, 14,
+                9, 13,  2, 18, 10,  4, 15, 12]
+        self.assertEqual(utils.pretty_list_repr(lst, max_line_len=80),
+                         ('[ 8,  3,  3, 14,  4,  4,  6,  5, 14,  9,'
+                          ' 13,  2, 18, 10,  4, 15, 12]'))
+
+    def test_pretty_list_format(self):
+        lst = [ 123.92704029,  1.98628919,  20.99657472,
+                6.69566871,  5.0193061 ]
+        lst_repr = utils.pretty_list_repr(lst, max_line_len=20, value_format='{0:.3f}')
+        self.assertEqual(lst_repr,
+            '[123.927,   1.986,\n  20.997,   6.696,\n   5.019]')
+
+    def test_pretty_list_repr_str_list(self):
+        lst = [ 'Apple', 'Banana', 'Tina\'s Pear', 'Red', 'Green', 'Blue']
+        lst_repr = utils.pretty_list_repr(lst, max_line_len=30)
+        self.assertEqual(lst_repr,
+                         ('''[      'Apple',      'Banana',\n'''
+                          ''' "Tina's Pear",         'Red',\n'''
+                          '''       'Green',        'Blue']'''))
+
+    def test_pretty_waveform_repr(self):
+        lst = [[  1,  5,  7],
+               [ 20,  2,  9]]
+        lst_repr = utils.pretty_waveform_repr(lst, max_line_len=15)
+        self.assertEqual(lst_repr, ('[[ 1,  5,  7],\n'
+                                    ' [20,  2,  9]]'))
 
 if __name__ == '__main__':
     unittest.main()

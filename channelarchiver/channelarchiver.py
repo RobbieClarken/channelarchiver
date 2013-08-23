@@ -12,11 +12,6 @@ from . import codes
 from . import utils
 from .exceptions import ChannelNotFound, ChannelKeyMismatch
 
-try:
-    StrType = basestring
-except NameError: # Python 3
-    StrType = str
-
 
 ArchiveProperties = collections.namedtuple('ArchiveProperties',
                                            'key start_time end_time')
@@ -51,11 +46,28 @@ class ChannelData(object):
     archive_key: The archive the data was pulled from.
     '''
 
-    def __init__(self, archive_key, archive_data, tz):
+    def __init__(self, values=None, times=None, statuses=None, severities=None,
+                 units=None, states=None, data_type=None, elements=None,
+                 display_limits=None, warn_limits=None, alarm_limits=None,
+                 display_precision=None, archive_key=None):
 
         super(ChannelData, self).__init__()
 
+        self.values = values
+        self.times = times
+        self.statuses = statuses
+        self.severities = severities
+        self.units = units
+        self.states = states
+        self.data_type = data_type
+        self.elements = elements
+        self.display_limits = display_limits
+        self.warn_limits = warn_limits
+        self.alarm_limits = alarm_limits
+        self.display_precision = display_precision
         self.archive_key = archive_key
+
+    def load_archive_data(self, archive_data, tz):
         self.channel = archive_data['name']
         self.data_type = archive_data['type']
         self.elements = elements = archive_data['count']
@@ -63,13 +75,7 @@ class ChannelData(object):
         meta_data = archive_data['meta']
         if meta_data['type'] == 0:
             self.states = meta_data['states']
-            self.display_limits = None
-            self.alarm_limits = None
-            self.warn_limits = None
-            self.display_precision = None
-            self.units = None
         else:
-            self.states = None
             self.display_limits = ChannelLimits(meta_data['disp_low'],
                                                 meta_data['disp_high'])
             self.alarm_limits = ChannelLimits(meta_data['alarm_low'],
@@ -95,6 +101,39 @@ class ChannelData(object):
         self.severity = severities
         self.times = times
         self.values = values
+
+    def __repr__(self):
+
+        if self.data_type == codes.data_type.DOUBLE:
+            fmt = '{0:.6g}'
+        else:
+            fmt = '{0!r}'
+
+        s = 'ChannelData(\n'
+        if self.elements == 1:
+            s += utils.pretty_list_repr(self.values, fmt,
+                                        prefix='    values=')
+        else:
+            s += utils.pretty_waveform_repr(self.values, fmt,
+                                            prefix='    values=')
+        s += ',\n'
+        for attr in ['times', 'statuses', 'severities', 'states']:
+            value = self.__getattribute__(attr)
+            if value is None:
+                continue
+            prefix = '    {0}='.format(attr)
+            s += utils.pretty_list_repr(value, prefix=prefix)
+            s += ',\n'
+        for attr in ['units', 'data_type', 'elements', 'display_limits',
+                     'warn_limits', 'alarm_limits', 'display_precision',
+                     'archive_key']:
+            value = self.__getattribute__(attr)
+            if value is None:
+                continue
+            s += '    {0}={1!r},\n'.format(attr, value)
+        s = s[:-2]
+        s += '\n)'
+        return s
 
 
 class Archiver(object):
@@ -127,7 +166,7 @@ class Archiver(object):
 
         if channels is None:
             channels = []
-        elif isinstance(channels, StrType):
+        elif isinstance(channels, utils.StrType):
             channels = [ channels ]
 
         channel_pattern = '|'.join(channels)
@@ -184,7 +223,7 @@ class Archiver(object):
             in. If omitted, UTC will be used.
         '''
         
-        received_str = isinstance(channels, StrType)
+        received_str = isinstance(channels, utils.StrType)
         if received_str:
             channels = [ channels ]
             if archive_keys is not None:
@@ -240,7 +279,8 @@ class Archiver(object):
                                         end_sec, end_nano,
                                         count, interpolation)
             for archive_data in data:
-                channel_data = ChannelData(archive_key, archive_data, tz)
+                channel_data = ChannelData(archive_key=archive_key)
+                channel_data.load_archive_data(archive_data, tz)
                 index = channels.index(channel_data.channel)
                 return_data[index] = channel_data
 

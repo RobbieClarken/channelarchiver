@@ -9,10 +9,6 @@ except ImportError: # Python 3
     from xmlrpc.client import Fault, ProtocolError
 from channelarchiver import codes, utils
 
-try:
-    StrType = basestring
-except NameError: # Python 3
-    StrType = str
 
 tests_dir =  os.path.dirname(os.path.realpath(__file__))
 data_dir = os.path.join(tests_dir, 'data')
@@ -69,7 +65,7 @@ class MockArchiver(object):
 
     def names(self, key, pattern):
         check_type(key, int, 'INT')
-        check_type(pattern, StrType, 'STRING')
+        check_type(pattern, utils.StrType, 'STRING')
         pattern = '.*{0}.*'.format(pattern)
         key = str(key)
         self._check_key(key)
