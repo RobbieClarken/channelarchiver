@@ -135,6 +135,27 @@ class ChannelData(object):
         s += '\n)'
         return s
 
+    def __str__(self):
+        times = ['time'] + [
+                    dt.replace(microsecond=0)
+                    .isoformat(' ').replace('+00:00', '')
+                        for dt in self.times]
+        values = ['value'] + list(map('{0:.9g}'.format, self.values))
+        statuses = ['status'] + list(map(str, self.statuses))
+        severities = ['severity'] + list(map(str, self.severities))
+        times_len = max(map(len, times))
+        values_len = max(map(len, values))
+        statuses_len = max(map(len, statuses))
+        severities_len = max(map(len, severities))
+        spec = ('{0:>' + str(times_len) + '}  '
+                '{1:>' + str(values_len) + '}  '
+                '{2:>' + str(statuses_len) + '}  '
+                '{3:>' + str(severities_len) + '}\n')
+        s = ''
+        for fields in zip(times, values, statuses, severities):
+            s += spec.format(*fields)
+        return s[:-1]
+
 
 class Archiver(object):
     '''
