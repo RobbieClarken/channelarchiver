@@ -23,6 +23,10 @@ class UTC(datetime.tzinfo):
         offset: Timezone offset in hours relative to UTC.
         '''
 
+        if not -24 < offset < 24:
+            raise ValueError('offset must be greater than -24 '
+                             'and less than 24')
+
         self.offset = datetime.timedelta(hours=offset)
 
     def utcoffset(self, dt):
@@ -50,15 +54,59 @@ class UTC(datetime.tzinfo):
             spec = 'UTC{sign}{hours:02d}:{minutes:02d}'
         return spec.format(**components)
 
+    def __str__(self):
+        return self.tzname()
+
     def __repr__(self):
         total_hours = HOURS_PER_DAY * self.offset.days + \
                       float(self.offset.seconds) / SECONDS_PER_HOUR
-        return 'UTC({0:.8g})'.format(total_hours) if total_hours else 'UTC()'
+        return 'UTC({0:+.8g})'.format(total_hours) if total_hours else 'UTC()'
 
 
 def utc_if_no_tzinfo(dt):
     return dt.replace(tzinfo=UTC()) if dt.tzinfo is None else dt
 
+
+def datetime_from_isoformat(iso_str):
+    '''
+    Convert a string in ISO 8601 format into a datetime. 
+    iso_str: String in ISO 8601 format. Examples:
+        '2013-08-19T14:29Z', '2013-08-19 14:29+10:00'
+    '''
+
+    match = re.match('^(.*:.*)([\+\-])(\d\d)(?::(\d\d))?$', iso_str)
+    offset = 0
+    if match is not None:
+        dt_str, tz_sign, tz_hr, tz_min = match.groups(0)
+        offset = int(tz_hr) + int(tz_min)/60.
+        if tz_sign == '-':
+            offset *= -1
+    else:
+        dt_str = iso_str
+    tz = UTC(offset)
+    dt_str = dt_str.replace('T', ' ').rstrip('Z')
+
+    formats = ['%Y-%m-%d %H:%M:%S.%f',
+               '%Y-%m-%d %H:%M:%S',
+               '%Y-%m-%d %H:%M',
+               '%Y-%m-%d %H',
+               '%Y-%m-%d',
+               '%Y-%m',
+               '%Y']
+
+    dt = None
+    for f in formats:
+        try:
+            dt = datetime.datetime.strptime(dt_str, f)
+        except ValueError:
+            continue
+        else:
+            break
+    if dt is None:
+        raise ValueError(('{0} is not a recognized '
+                          'datetime format').format(iso_str))
+    dt = dt.replace(tzinfo=tz)
+    return dt
 
 def datetime_from_sec_and_nano(seconds, nanoseconds=0, tz=None):
     '''

@@ -220,9 +220,9 @@ class Archiver(object):
 
         channels: The channels to get data for. Can be a string or
             list of strings.
-        start: Start time as a datetime. If no timezone is specified,
-            assumes UTC.
-        end: End time as a datetime.
+        start: Start time as a datetime or ISO 8601 formatted string.
+            If no timezone is specified, assumes UTC.
+        end: End time as a datetime or ISO 8601 formatted string.
         count: (optional) Number of data points to aim to retrieve.
             The actual number returned may differ depending on the
             number of points in the archive, the interpolation method
@@ -241,7 +241,7 @@ class Archiver(object):
             is omitted the archives with the greatest coverage of the
             requested time interval will be used.
         tz: (optional) The timezone that datetimes should be returned
-            in. If omitted, UTC will be used.
+            in. If omitted, the timezone of start will be used.
         '''
         
         received_str = isinstance(channels, utils.StrType)
@@ -250,8 +250,13 @@ class Archiver(object):
             if archive_keys is not None:
                 archive_keys = [ archive_keys ]
 
+        if isinstance(start, utils.StrType):
+            start = utils.datetime_from_isoformat(start)
+        if isinstance(end, utils.StrType):
+            end = utils.datetime_from_isoformat(end)
+
         if tz is None:
-            tz = utils.UTC()
+            tz = start.tzinfo if start.tzinfo else utils.UTC()
 
         # Convert datetimes to seconds and nanoseconds for archiver request
         start_sec, start_nano = utils.sec_and_nano_from_datetime(start)

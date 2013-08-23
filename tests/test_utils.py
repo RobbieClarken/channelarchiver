@@ -24,7 +24,7 @@ class TestUtils(unittest.TestCase):
         hours = 6 + 3./60.
         tz = utils.UTC(hours)
         self.assertEqual(tz.tzname(), 'UTC+06:03')
-        self.assertEqual(repr(tz), 'UTC(6.05)')
+        self.assertEqual(repr(tz), 'UTC(+6.05)')
 
     def test_utc_with_negative_offset(self):
         hours = - (6 + 45./60.)
@@ -36,7 +36,58 @@ class TestUtils(unittest.TestCase):
         hours = 23 + 15./60. + 8./3600.
         tz = utils.UTC(hours)
         self.assertEqual(tz.tzname(), 'UTC+23:15:08')
-        self.assertEqual(repr(tz), 'UTC(23.252222)')
+        self.assertEqual(repr(tz), 'UTC(+23.252222)')
+
+    def test_datetime_isoformat(self):
+        iso_str = '2013-08-07 10:21:55.012345'
+        dt = utils.datetime_from_isoformat(iso_str)
+        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 12345, utils.UTC()))
+
+    def test_datetime_isoformat_with_T(self):
+        iso_str = '2013-08-07T10:21:55.012345'
+        dt = utils.datetime_from_isoformat(iso_str)
+        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 12345, utils.UTC()))
+
+    def test_datetime_isoformat_with_Z(self):
+        iso_str = '2013-08-07 10:21:55.012345Z'
+        dt = utils.datetime_from_isoformat(iso_str)
+        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 12345, utils.UTC()))
+
+    def test_datetime_isoformat_with_tz(self):
+        iso_str = '2013-08-07 10:21:55.012345+10:00'
+        dt = utils.datetime_from_isoformat(iso_str)
+        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 12345, utils.UTC(10)))
+
+    def test_datetime_isoformat_with_tz(self):
+        iso_str = '2013-08-07 10:21:55.012345+08'
+        dt = utils.datetime_from_isoformat(iso_str)
+        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 12345, utils.UTC(8)))
+
+    def test_datetime_isoformat_no_ms(self):
+        iso_str = '2013-08-07 10:21:55'
+        dt = utils.datetime_from_isoformat(iso_str)
+        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 0, utils.UTC()))
+
+    def test_datetime_isoformat_no_secs(self):
+        iso_str = '2013-08-07 10:21'
+        dt = utils.datetime_from_isoformat(iso_str)
+        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 0, 0, utils.UTC()))
+
+    def test_datetime_isoformat_no_secs_tz(self):
+        iso_str = '2013-08-07 10:21-09:00'
+        dt = utils.datetime_from_isoformat(iso_str)
+        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 0, 0, utils.UTC(-9)))
+
+    def test_datetime_isoformat_no_hrs(self):
+        iso_str = '2013-08-07'
+        dt = utils.datetime_from_isoformat(iso_str)
+        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 0, 0, 0, 0, utils.UTC()))
+
+    def test_datetime_isoformat_bad_str(self):
+        iso_str = '09:00 21/08/2103'
+        self.assertRaises(ValueError,
+                          utils.datetime_from_isoformat,
+                          iso_str)
 
     def test_datetime_from_sec_and_nano(self):
         seconds = 1376706013
