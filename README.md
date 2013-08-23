@@ -74,6 +74,7 @@ The interpolation is determined by the `interpolation` parameter. The allowed va
 
 ```python
 >>> from channelarchiver import codes
->>> data = archiver.get('SR00MOS01:FREQUENCY_MONITOR', '2012', '2013', limit=10000, interpolation=codes.interpolation.RAW)
+>>> channel = 'SR00MOS01:FREQUENCY_MONITOR'
+>>> data = archiver.get(channel, '2012', '2013', limit=10000, interpolation=codes.interpolation.RAW)
 ```
 
