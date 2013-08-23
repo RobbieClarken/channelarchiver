@@ -7,14 +7,14 @@
         "count": 1,
         "meta": {
           "alarm_high": 220.0,
-          "alarm_low": 0.0,
+          "alarm_low": 198.0,
           "disp_high": 200.0,
           "disp_low": 0.0,
           "prec": 3,
           "type": 1,
           "units": "mA",
           "warn_high": 210.0,
-          "warn_low": 0.0
+          "warn_low": 200.0
         },
         "name": "EXAMPLE:DOUBLE_SCALAR",
         "type": 3,
@@ -31,8 +31,8 @@
           {
             "nano": 443588732,
             "secs": 1342145101,
-            "sevr": 0,
-            "stat": 0,
+            "sevr": 1,
+            "stat": 6,
             "value": [
               199.9
             ]
@@ -40,8 +40,8 @@
           {
             "nano": 806097162,
             "secs": 1342163971,
-            "sevr": 0,
-            "stat": 0,
+            "sevr": 1,
+            "stat": 6,
             "value": [
               198.7
             ]
@@ -49,8 +49,8 @@
           {
             "nano": 671259311,
             "secs": 1342178335,
-            "sevr": 0,
-            "stat": 0,
+            "sevr": 2,
+            "stat": 5,
             "value": [
               196.1
             ]

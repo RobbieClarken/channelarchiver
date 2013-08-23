@@ -54,6 +54,8 @@ class TestArchiver(unittest.TestCase):
             datetime.datetime(2012, 7, 13, 7, 19, 31, 806097, utc),
             datetime.datetime(2012, 7, 13, 11, 18, 55, 671259, utc)
         ])
+        self.assertEqual(channel_data.statuses, [0, 6, 6, 5])
+        self.assertEqual(channel_data.severities, [0, 1, 1, 2])
 
     def test_get_scalar_str(self):
         start = datetime.datetime(2012, 1, 1)

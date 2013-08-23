@@ -98,7 +98,7 @@ class ChannelData(object):
                                                          sample['nano'],
                                                          tz))
         self.statuses = statuses
-        self.severity = severities
+        self.severities = severities
         self.times = times
         self.values = values
 
