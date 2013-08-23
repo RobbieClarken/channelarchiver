@@ -15,7 +15,6 @@ class Constants(object):
             self._reverse_dict[value] = name
         
     def __repr__(self):
-        constants_str = ', '.join('{0}={1!r}'.format(k, v)
-                                   for k, v in self.__dict__.items()
-                                   if not k.startswith('_'))
+        constants_str = ', '.join('{0}={1!r}'.format(v, k) for k, v
+                                  in sorted(self._reverse_dict.items()))
         return 'Constants({0})'.format(constants_str)
