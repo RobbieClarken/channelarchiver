@@ -214,8 +214,8 @@ class Archiver(object):
                     self.archives_for_channel[channel][:] = [ properties ]
                     list_emptied_for_channel[channel] = True
     
-    def get(self, channels, start, end, count=10000,
-               interpolation=codes.interpolate.LINEAR,
+    def get(self, channels, start, end, limit=1000,
+               interpolation=codes.interpolation.LINEAR,
                scan_archives=True, archive_keys=None, tz=None):
         '''
         Retrieves archived.
@@ -225,7 +225,7 @@ class Archiver(object):
         start: Start time as a datetime or ISO 8601 formatted string.
             If no timezone is specified, assumes UTC.
         end: End time as a datetime or ISO 8601 formatted string.
-        count: (optional) Number of data points to aim to retrieve.
+        limit: (optional) Number of data points to aim to retrieve.
             The actual number returned may differ depending on the
             number of points in the archive, the interpolation method
             and the maximum allowed points set by the archiver.
@@ -305,7 +305,7 @@ class Archiver(object):
             data = self.archiver.values(archive_key, channels_on_archive,
                                         start_sec, start_nano,
                                         end_sec, end_nano,
-                                        count, interpolation)
+                                        limit, interpolation)
             for archive_data in data:
                 channel_data = ChannelData(archive_key=archive_key)
                 channel_data.load_archive_data(archive_data, tz)

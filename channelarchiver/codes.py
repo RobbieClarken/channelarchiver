@@ -39,7 +39,7 @@ severity = Constants(
     ARCHIVE_DISABLED = 3848,
 )
 
-interpolate = Constants(
+interpolation = Constants(
     RAW = 0,
     SPREADSHEET = 1,
     AVERAGED = 2,

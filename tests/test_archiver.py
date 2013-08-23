@@ -41,7 +41,7 @@ class TestArchiver(unittest.TestCase):
         start = datetime.datetime(2012, 1, 1)
         end = datetime.datetime(2013, 1, 1)
         data = self.archiver.get(['EXAMPLE:DOUBLE_SCALAR'], start, end,
-                                 interpolation=codes.interpolate.RAW)
+                                 interpolation=codes.interpolation.RAW)
         self.assertTrue(isinstance(data, list))
         channel_data = data[0]
         self.assertEqual(channel_data.channel, 'EXAMPLE:DOUBLE_SCALAR')
@@ -68,7 +68,7 @@ class TestArchiver(unittest.TestCase):
         start = datetime.datetime(2012, 1, 1)
         end = datetime.datetime(2013, 1, 1)
         channel_data = self.archiver.get('EXAMPLE:DOUBLE_SCALAR', start, end,
-                                        interpolation=codes.interpolate.RAW)
+                                        interpolation=codes.interpolation.RAW)
         self.assertTrue(isinstance(channel_data, ChannelData))
         self.assertEqual(channel_data.channel, 'EXAMPLE:DOUBLE_SCALAR')
         self.assertEqual(channel_data.data_type, codes.data_type.DOUBLE)
@@ -77,7 +77,7 @@ class TestArchiver(unittest.TestCase):
         start = datetime.datetime(2012, 1, 1)
         end = datetime.datetime(2013, 1, 1)
         data = self.archiver.get('EXAMPLE:DOUBLE_SCALAR', start, end,
-                                 interpolation=codes.interpolate.RAW,
+                                 interpolation=codes.interpolation.RAW,
                                  tz=utils.UTC(11.5))
         self.assertEqual(str(data.times[0].tzinfo), 'UTC+11:30')
         self.assertEqual(repr(data.times[0].tzinfo), 'UTC(+11.5)')
@@ -88,14 +88,14 @@ class TestArchiver(unittest.TestCase):
         self.assertRaises(exceptions.ChannelNotFound,
                           self.archiver.get, ['EXAMPLE:DOUBLE_SCALAR'],
                           start, end,
-                          interpolation=codes.interpolate.RAW,
+                          interpolation=codes.interpolation.RAW,
                           scan_archives=False)
 
     def test_get_with_restrictive_interval(self):
         start = datetime.datetime(2012, 7, 13)
         end = datetime.datetime(2012, 7, 13, 10)
         channel_data = self.archiver.get('EXAMPLE:DOUBLE_SCALAR', start, end,
-                                         interpolation=codes.interpolate.RAW)
+                                         interpolation=codes.interpolation.RAW)
         self.assertEqual(channel_data.values, [ 199.9, 198.7 ])
         self.assertEqual(channel_data.times, [
             datetime.datetime(2012, 7, 13, 2, 5, 1, 443589, utc),
@@ -106,7 +106,7 @@ class TestArchiver(unittest.TestCase):
         start = datetime.datetime(2012, 7, 13, 10, tzinfo=utils.UTC(10))
         end = datetime.datetime(2012, 7, 13, 20, tzinfo=utils.UTC(10))
         channel_data = self.archiver.get('EXAMPLE:DOUBLE_SCALAR', start, end,
-                                         interpolation=codes.interpolate.RAW)
+                                         interpolation=codes.interpolation.RAW)
         self.assertEqual(channel_data.values, [ 199.9, 198.7 ])
         self.assertEqual(channel_data.times, [
             datetime.datetime(2012, 7, 13, 2, 5, 1, 443589, utc),
@@ -118,7 +118,7 @@ class TestArchiver(unittest.TestCase):
         start = '2012-07-13 00:00:00'
         end = '2012-07-13 10:00:00'
         channel_data = self.archiver.get('EXAMPLE:DOUBLE_SCALAR', start, end,
-                                         interpolation=codes.interpolate.RAW)
+                                         interpolation=codes.interpolation.RAW)
         self.assertEqual(channel_data.values, [ 199.9, 198.7 ])
         self.assertEqual(channel_data.times, [
             datetime.datetime(2012, 7, 13, 2, 5, 1, 443589, utc),
@@ -129,7 +129,7 @@ class TestArchiver(unittest.TestCase):
         start = '2012-07-13 10:00:00+10:00'
         end = '2012-07-13 20:00:00+10:00'
         channel_data = self.archiver.get('EXAMPLE:DOUBLE_SCALAR', start, end,
-                                         interpolation=codes.interpolate.RAW)
+                                         interpolation=codes.interpolation.RAW)
         self.assertEqual(channel_data.values, [ 199.9, 198.7 ])
         self.assertEqual(channel_data.times, [
             datetime.datetime(2012, 7, 13, 2, 5, 1, 443589, utc),
@@ -142,7 +142,7 @@ class TestArchiver(unittest.TestCase):
         end = datetime.datetime(2013, 1, 1)
         channel_data = self.archiver.get(
                             'EXAMPLE:INT_WAVEFORM', start, end,
-                            interpolation=codes.interpolate.RAW)
+                            interpolation=codes.interpolation.RAW)
         self.assertEqual(channel_data.channel, 'EXAMPLE:INT_WAVEFORM')
         self.assertEqual(channel_data.data_type, codes.data_type.INT)
         self.assertEqual(channel_data.elements, 3)
@@ -157,7 +157,7 @@ class TestArchiver(unittest.TestCase):
         end = datetime.datetime(2013, 1, 1)
         channel_data = self.archiver.get(
                             'EXAMPLE:ENUM_SCALAR', start, end,
-                            interpolation=codes.interpolate.RAW)
+                            interpolation=codes.interpolation.RAW)
         self.assertEqual(channel_data.channel, 'EXAMPLE:ENUM_SCALAR')
         self.assertEqual(channel_data.data_type, codes.data_type.ENUM)
         self.assertEqual(channel_data.values, [7, 1, 8])
@@ -170,7 +170,7 @@ class TestArchiver(unittest.TestCase):
                  'EXAMPLE:INT_WAVEFORM',
                  'EXAMPLE:ENUM_SCALAR'],
                 start, end,
-                interpolation=codes.interpolate.RAW)
+                interpolation=codes.interpolation.RAW)
         self.assertTrue(isinstance(data, list))
         self.assertEqual(data[0].channel, 'EXAMPLE:DOUBLE_SCALAR')
         self.assertEqual(data[1].channel, 'EXAMPLE:INT_WAVEFORM')
@@ -189,7 +189,7 @@ class TestArchiver(unittest.TestCase):
                           [ 'EXAMPLE:DOUBLE_SCALAR' ],
                           start, end,
                           archive_keys=[1001, 1008],
-                          interpolation=codes.interpolate.RAW)
+                          interpolation=codes.interpolation.RAW)
 
 if __name__ == '__main__':
     unittest.main()
