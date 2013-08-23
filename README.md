@@ -23,13 +23,45 @@ You then fetch data with the `archiver.get()` method:
 
 The returned `ChannelData` object has the following fields:
 
+* `channel`: The channel name.
 * `times`: A list of datetimes.
 * `values`: A list of the channel's values corresponding to `times`.
 * `severities` and `statuses`: Diagnostic information about the channel state for each time.
-* `units`
+* `units`: The units of `values`.
 * `states`: String values for enum type channels.
 * `data_type`: Whether the channel values are string, enum, int or double (see `codes.data_type`).
 * `elements`: The number of elements in an array type channel.
 * `display_limits`, `warn_limits`, `alarm_limits`: Low and high limits
 * `display_precision`: The recommended number of decimal places to to display values with in user interfaces.
 
+### Get multiple channels
+
+If you pass a list of channel names to `.get()` you will get a list of data objects back:
+
+```python
+>>> x, y = archiver.get(['SR00TUM01:X_TUNE', 'SR00TUM01:Y_TUNE'], '2013-08-24 09:00', '2013-08-24 19:00')
+>>> print x.values
+[ 0.291, 0.290, ..., 0.289]
+>>> print y.values
+[ 0.216, 0.217, ..., 0.213]
+```
+
+### Times and timezones
+
+The start and end times over which to fetch data can be `datetime`s or strings in ISO 8601 format (`yyyy-mm-dd HH-MM-SS`).
+
+If no timezone is specified, UTC will be used. If a timezone is given, the returned channel data times will also be in this timezone.
+
+```python
+>>> import datetime
+>>> import pytz
+>>> tz = pytz.timezone('Australia/Melbourne')
+>>> start = datetime.datetime(2012, 6, 1, tzinfo=tz)
+>>> end = datetime.datetime(2012, 6, 30, tzinfo=tz)
+>>> data = archiver.get('BR00EXS01:TUNNEL_TEMPERATURE_MONITOR', start, end)
+                     time       value      status  severity
+2012-08-09 11:00:46+10:00  23.8521546  HIHI_ALARM     MAJOR
+2012-08-09 11:01:32+10:00  23.8737399  HIHI_ALARM     MAJOR
+2012-08-09 11:02:19+10:00  23.8775618  HIHI_ALARM     MAJOR
+...
+```
