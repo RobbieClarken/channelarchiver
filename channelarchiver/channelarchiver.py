@@ -141,8 +141,10 @@ class ChannelData(object):
                     .isoformat(' ').replace('+00:00', '')
                         for dt in self.times]
         values = ['value'] + list(map('{0:.9g}'.format, self.values))
-        statuses = ['status'] + list(map(str, self.statuses))
-        severities = ['severity'] + list(map(str, self.severities))
+        statuses = ['status'] + \
+                list(map(codes.status.str_value, self.statuses))
+        severities = ['severity'] + \
+                list(map(codes.severity.str_value, self.severities))
         times_len = max(map(len, times))
         values_len = max(map(len, values))
         statuses_len = max(map(len, statuses))
