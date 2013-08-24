@@ -80,3 +80,12 @@ The interpolation is determined by the `interpolation` parameter. The allowed va
 >>> data = archiver.get(channel, '2012', '2013', limit=10000, interpolation=codes.interpolation.RAW)
 ```
 
+### Speeding up data retrieval
+
+By default, for each `.get` call `Archive` will scan the archives to determine which one contains data for the specified channels. This will cause a slight delay in retrieving the data. This can be avoided by calling the `.scan_archives()` method once and then passing `scan_archives=False` to `.get()`:
+
+```python
+>>> archiver.scan_archives()
+>>> d1 = archiver.get('SR02GRM01:DOSE_RATE_MONITOR', '2013-07', '2013-08', scan_archives=False)
+>>> d2 = archiver.get('SR11BCM01:LIFETIME_MONITOR', '2013-07', '2013-08', scan_archives=False)
+```
