@@ -15,7 +15,7 @@ setup(
     install_requires=[],
     license=open('LICENSE.md').read(),
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Topic :: Scientific/Engineering',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
@@ -23,6 +23,8 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
         'License :: OSI Approved :: MIT License',
     ],
 )
