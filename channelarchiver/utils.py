@@ -147,6 +147,8 @@ def overlap_between_intervals(first_range_start, first_range_end,
 
 def pretty_list_repr(lst, value_format='{0!r}', max_line_len=79, prefix='',
                      min_value_len=0):
+    if not lst:
+        return repr(lst)
     lst = list(map(value_format.format, lst))
     values = len(lst)
     max_value_len = max(max(map(len, lst)), min_value_len)

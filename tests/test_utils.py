@@ -196,12 +196,22 @@ class TestUtils(unittest.TestCase):
                           ''' "Tina's Pear",         'Red',\n'''
                           '''       'Green',        'Blue']'''))
 
+    def test_pretty_list_repr_empty_list(self):
+        lst = []
+        lst_repr = utils.pretty_list_repr(lst)
+        self.assertEqual(lst_repr, '[]')
+
     def test_pretty_waveform_repr(self):
         lst = [[  1,  5,  7],
                [ 20,  2,  9]]
         lst_repr = utils.pretty_waveform_repr(lst, max_line_len=15)
         self.assertEqual(lst_repr, ('[[ 1,  5,  7],\n'
                                     ' [20,  2,  9]]'))
+
+    def test_pretty_waveform_repr_empty_list(self):
+        lst = []
+        lst_repr = utils.pretty_list_repr(lst)
+        self.assertEqual(lst_repr, '[]')
 
 if __name__ == '__main__':
     unittest.main()
