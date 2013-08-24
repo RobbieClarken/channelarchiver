@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from .models import Constants
+from .structures import Codes
 
-status = Constants(
+status = Codes(
     NO_ALARM = 0,
     READ_ALARM = 1,
     WRITE_ALARM = 2,
@@ -27,7 +27,7 @@ status = Constants(
     WRITE_ACCESS_ALARM = 21
 )
 
-severity = Constants(
+severity = Codes(
     NO_ALARM = 0,
     MINOR = 1,
     MAJOR = 2,
@@ -39,7 +39,7 @@ severity = Constants(
     ARCHIVE_DISABLED = 3848,
 )
 
-interpolation = Constants(
+interpolation = Codes(
     RAW = 0,
     SPREADSHEET = 1,
     AVERAGED = 2,
@@ -47,14 +47,14 @@ interpolation = Constants(
     LINEAR = 4,
 )
 
-data_type = Constants(
+data_type = Codes(
     STRING = 0,
     ENUM = 1,
     INT = 2,
     DOUBLE = 3,
 )
 
-xmlrpc = Constants(
+xmlrpc = Codes(
     UNSPECIFIED = 0,
     INTERNAL = -500,
     TYPE = -501,
@@ -69,7 +69,7 @@ xmlrpc = Constants(
     INVALID_UTF8 = -510,
 )
 
-archiver = Constants(
+archiver = Codes(
     SEVER_FAULT = -600,
     NO_INDEX = -601,
     ARGUMENT_ERROR = -602,
