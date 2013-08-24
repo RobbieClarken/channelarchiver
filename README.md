@@ -34,7 +34,7 @@ The returned `ChannelData` object has the following fields:
 * `display_limits`, `warn_limits`, `alarm_limits`: Low and high limits
 * `display_precision`: The recommended number of decimal places to to display values with in user interfaces.
 * `channel_key`: The archive the data was retrieved from.
-* `interpolation`: The the interpolation method that was used.
+* `interpolation`: The interpolation method that was used (see `codes.interpolation`).
 
 ### Get multiple channels
 
