@@ -137,23 +137,47 @@ class ChannelData(object):
                     dt.replace(microsecond=0)
                     .isoformat(' ').replace('+00:00', '')
                         for dt in self.times]
-        values = ['value'] + list(map('{0:.9g}'.format, self.values))
         statuses = ['status'] + \
                 list(map(codes.status.str_value, self.statuses))
         severities = ['severity'] + \
                 list(map(codes.severity.str_value, self.severities))
         times_len = max(map(len, times))
-        values_len = max(map(len, values))
         statuses_len = max(map(len, statuses))
         severities_len = max(map(len, severities))
+        s = ''
+        value_format = '{0:.9g}'
+        if self.elements == 1:
+            values = ['value'] + list(map(value_format.format, self.values))
+        else:
+            len_for_values = 79 - times_len - statuses_len - severities_len - 6
+            values = ['value']
+            max_value_len = utils.max_value_len_in_waveform(self.values,
+                                                            value_format)
+            for value in self.values:
+                formatted_value = utils.pretty_list_repr(
+                                    value, value_format,
+                                    max_line_len=len_for_values,
+                                    min_value_len=max_value_len)
+                values += formatted_value.split('\n')
+
+        values_len = max(map(len, values))
         spec = ('{0:>' + str(times_len) + '}  '
                 '{1:>' + str(values_len) + '}  '
                 '{2:>' + str(statuses_len) + '}  '
                 '{3:>' + str(severities_len) + '}\n')
-        s = ''
-        for fields in zip(times, values, statuses, severities):
-            s += spec.format(*fields)
-        return s[:-1]
+
+        if self.elements == 1:
+            for fields in zip(times, values, statuses, severities):
+                s += spec.format(*fields)
+        else:
+            i = 0
+            for line in values:
+                if i == 0 or '[' in line:
+                    s += spec.format(times[i], line, statuses[i], severities[i])
+                    i += 1
+                else:
+                    s += spec.format('', line.ljust(values_len), '', '')
+        return s.rstrip()
 
 
 class Archiver(object):

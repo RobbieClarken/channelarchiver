@@ -171,13 +171,16 @@ def pretty_list_repr(lst, value_format='{0!r}', max_line_len=79, prefix='',
         s += ']' if line == lines - 1 else ',\n'
     return s
 
-
-def pretty_waveform_repr(lst, value_format='{0!r}', max_line_len=79, prefix=''):
+def max_value_len_in_waveform(lst, value_format='{0!r}'):
     max_value_len = 0
     for sub_lst in lst:
         sub_lst = map(value_format.format, sub_lst)
         sub_max_val_len = max(map(len, sub_lst))
         max_value_len = max(max_value_len, sub_max_val_len)
+    return max_value_len
+
+def pretty_waveform_repr(lst, value_format='{0!r}', max_line_len=79, prefix=''):
+    max_value_len = max_value_len_in_waveform(lst, value_format)
     s = ''
     for idx, sub_lst in enumerate(lst):
         p = prefix + '[' if idx == 0 else ' ' * (len(prefix) + 1)
