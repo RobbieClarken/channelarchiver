@@ -70,7 +70,7 @@ If no timezone is specified, UTC will be used. If a timezone is given, the retur
 
 You can control how much data is returned from the archiver with the `limit` parameter. This is roughly equal to how many data points will be returned but the actual value will differ depending on how data is available and the interpolation method.
 
-The interpolation is determined by the `interpolation` parameter. The allowed values are the constants available in `channelarchiver.codes.interpolation`: `RAW`, `SPREADSHEET`, `AVERAGED`, `PLOT_BINNING`, `LINEAR`. The default value is `LINEAR`.
+The interpolation is determined by the `interpolation` parameter. The allowed values are the constants in `channelarchiver.codes.interpolation`: `RAW`, `SPREADSHEET`, `AVERAGED`, `PLOT_BINNING` and `LINEAR`. The default value is `LINEAR`.
 
 ```python
 >>> from channelarchiver import codes
