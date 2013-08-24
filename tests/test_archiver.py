@@ -56,12 +56,6 @@ class TestArchiver(unittest.TestCase):
         ])
         self.assertEqual(channel_data.statuses, [0, 6, 6, 5])
         self.assertEqual(channel_data.severities, [0, 1, 1, 2])
-        self.assertEqual(str(channel_data),
-                ('               time  value      status  severity\n'
-                 '2012-07-12 21:47:23  200.5    NO_ALARM  NO_ALARM\n'
-                 '2012-07-13 02:05:01  199.9   LOW_ALARM     MINOR\n'
-                 '2012-07-13 07:19:31  198.7   LOW_ALARM     MINOR\n'
-                 '2012-07-13 11:18:55  196.1  LOLO_ALARM     MAJOR'))
         self.assertEqual(repr(channel_data.times[0].tzinfo), 'UTC()')
 
     def test_get_scalar_str(self):

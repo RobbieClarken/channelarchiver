@@ -42,13 +42,14 @@ class ChannelData(object):
     archive_key: The archive the data was pulled from.
     '''
 
-    def __init__(self, values=None, times=None, statuses=None, severities=None,
-                 units=None, states=None, data_type=None, elements=None,
-                 display_limits=None, warn_limits=None, alarm_limits=None,
-                 display_precision=None, archive_key=None):
+    def __init__(self, channel=None, values=None, times=None, statuses=None,
+                 severities=None, units=None, states=None, data_type=None,
+                 elements=None, display_limits=None, warn_limits=None,
+                 alarm_limits=None, display_precision=None, archive_key=None):
 
         super(ChannelData, self).__init__()
 
+        self.channel = channel
         self.values = values
         self.times = times
         self.statuses = statuses
