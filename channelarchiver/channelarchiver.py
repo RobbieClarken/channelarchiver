@@ -5,17 +5,13 @@ try:
 except ImportError: # Python 3
     from xmlrpc.client import Server
 
-import collections
+from collections import defaultdict
 from itertools import groupby
 
 from . import codes
 from . import utils
+from .models import ArchiveProperties, Limits
 from .exceptions import ChannelNotFound, ChannelKeyMismatch
-
-
-ArchiveProperties = collections.namedtuple('ArchiveProperties',
-                                           'key start_time end_time')
-ChannelLimits = collections.namedtuple('ChannelLimits', 'low high')
 
 
 class ChannelData(object):
@@ -76,12 +72,12 @@ class ChannelData(object):
         if meta_data['type'] == 0:
             self.states = meta_data['states']
         else:
-            self.display_limits = ChannelLimits(meta_data['disp_low'],
-                                                meta_data['disp_high'])
-            self.alarm_limits = ChannelLimits(meta_data['alarm_low'],
-                                              meta_data['alarm_high'])
-            self.warn_limits = ChannelLimits(meta_data['warn_low'],
-                                             meta_data['warn_high'])
+            self.display_limits = Limits(meta_data['disp_low'],
+                                         meta_data['disp_high'])
+            self.alarm_limits = Limits(meta_data['alarm_low'],
+                                       meta_data['alarm_high'])
+            self.warn_limits = Limits(meta_data['warn_low'],
+                                      meta_data['warn_high'])
             self.display_precision = meta_data['prec']
             self.units = meta_data['units']
 
@@ -174,7 +170,7 @@ class Archiver(object):
         super(Archiver, self).__init__()
         self.server = Server(host)
         self.archiver = self.server.archiver
-        self.archives_for_channel = collections.defaultdict(list)
+        self.archives_for_channel = defaultdict(list)
     
     def scan_archives(self, channels=None):
         '''
@@ -193,7 +189,7 @@ class Archiver(object):
             channels = [ channels ]
 
         channel_pattern = '|'.join(channels)
-        list_emptied_for_channel = collections.defaultdict(bool)
+        list_emptied_for_channel = defaultdict(bool)
         for archive in self.archiver.archives():
             archive_key = archive['key']
             archives = self.archiver.names(archive_key, channel_pattern)
@@ -268,7 +264,7 @@ class Archiver(object):
             self.scan_archives(channels)
         
         if archive_keys is None:
-            channels_for_key = collections.defaultdict(list)
+            channels_for_key = defaultdict(list)
             for channel in channels:
                 greatest_overlap = None
                 key_with_greatest_overlap = None

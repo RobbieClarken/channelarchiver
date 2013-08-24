@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .structures import Constants
+from .models import Constants
 
 status = Constants(
     NO_ALARM = 0,

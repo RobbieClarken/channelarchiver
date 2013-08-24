@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from collections import namedtuple
+
+ArchiveProperties = namedtuple('ArchiveProperties',
+                               'key start_time end_time')
+
+Limits = namedtuple('Limits', 'low high')
+
 class Constants(object):
     def __init__(self, **kws):
         self._reverse_dict = {}
