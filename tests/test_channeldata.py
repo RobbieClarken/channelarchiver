@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from channelarchiver import ChannelData, codes, utils
-from channelarchiver.models import Limits
+from channelarchiver import codes, utils
+from channelarchiver.models import ChannelData, Limits
 import datetime
 
 utc = utils.UTC()

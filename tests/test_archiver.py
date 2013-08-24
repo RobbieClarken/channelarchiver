@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from channelarchiver import Archiver, ChannelData, codes, utils, exceptions
+from channelarchiver import Archiver,  codes, utils, exceptions
+from channelarchiver.models import ChannelData
 from .mock_archiver import MockArchiver
 import datetime
 
