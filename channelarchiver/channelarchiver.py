@@ -152,14 +152,14 @@ class Archiver(object):
         if isinstance(end, utils.StrType):
             end = utils.datetime_from_isoformat(end)
 
-        if tz is None:
-            tz = start.tzinfo if start.tzinfo else utils.local_tz
-
         if start.tzinfo is None:
             start = start.replace(tzinfo=utils.local_tz)
 
         if end.tzinfo is None:
             end = end.replace(tzinfo=utils.local_tz)
+
+        if tz is None:
+            tz = start.tzinfo
 
         # Convert datetimes to seconds and nanoseconds for archiver request
         start_sec, start_nano = utils.sec_and_nano_from_datetime(start)
