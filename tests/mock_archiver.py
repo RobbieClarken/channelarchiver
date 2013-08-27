@@ -47,8 +47,10 @@ class MockArchiver(object):
             - 2012-07-13 03:15:42.414257465: 1
             - 2012-07-13 09:20:23.623788581: 8
     '''
-    _archives = read_data('archives')
-    _info = read_data('info')
+
+    def __init__(self):
+        self._archives = read_data('archives')
+        self._info = read_data('info')
 
     def info(self):
         return self._info

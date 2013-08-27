@@ -3,7 +3,7 @@
 
 import unittest
 from channelarchiver import Archiver,  codes, utils, exceptions
-from channelarchiver.models import ChannelData
+from channelarchiver.models import ChannelData, ArchiveProperties
 from .mock_archiver import MockArchiver
 import datetime
 
@@ -18,25 +18,51 @@ class TestArchiver(unittest.TestCase):
 
     def test_scan_archives_all(self):
         self.archiver.scan_archives()
-        channels_found = self.archiver.archives_for_channel.keys()
-        self.assertTrue('EXAMPLE:DOUBLE_SCALAR' in channels_found)
-        self.assertTrue('EXAMPLE:INT_WAVEFORM' in channels_found)
-        self.assertTrue('EXAMPLE:ENUM_SCALAR' in channels_found)
+        archives_for_channel = self.archiver.archives_for_channel
+        self.assertTrue('EXAMPLE:DOUBLE_SCALAR' in archives_for_channel)
+        self.assertTrue('EXAMPLE:INT_WAVEFORM' in archives_for_channel)
+        self.assertTrue('EXAMPLE:ENUM_SCALAR' in archives_for_channel)
+        self.assertEqual(
+            archives_for_channel,
+            {
+                'EXAMPLE:DOUBLE_SCALAR': [
+                    ArchiveProperties(
+                        key=1001,
+                        start_time=datetime.datetime(2012, 7, 12, 21, 47, 23, 664000, tzinfo=utc),
+                        end_time=datetime.datetime(2012, 7, 13, 11, 18, 55, 671259, tzinfo=utc)
+                    )
+                 ],
+                 'EXAMPLE:INT_WAVEFORM': [
+                     ArchiveProperties(
+                         key=1001,
+                         start_time=datetime.datetime(2012, 7, 12, 23, 14, 19, 129600, tzinfo=utc),
+                         end_time=datetime.datetime(2012, 7, 13, 8, 26, 18, 558211, tzinfo=utc)
+                     )
+                 ],
+                 'EXAMPLE:ENUM_SCALAR': [
+                     ArchiveProperties(
+                         key=1008,
+                         start_time=datetime.datetime(2012, 7, 12, 22, 41, 10, 765676, tzinfo=utc),
+                         end_time=datetime.datetime(2012, 7, 13, 9, 20, 23, 623789, tzinfo=utc)
+                     )
+                 ]
+            }
+        )
 
     def test_scan_archives_one(self):
         self.archiver.scan_archives('EXAMPLE:DOUBLE_SCALAR')
-        channels_found = self.archiver.archives_for_channel.keys()
-        self.assertTrue('EXAMPLE:DOUBLE_SCALAR' in channels_found)
-        self.assertFalse('EXAMPLE:INT_WAVEFORM' in channels_found)
-        self.assertFalse('EXAMPLE:ENUM_SCALAR' in channels_found)
+        archives_for_channel = self.archiver.archives_for_channel.keys()
+        self.assertTrue('EXAMPLE:DOUBLE_SCALAR' in archives_for_channel)
+        self.assertFalse('EXAMPLE:INT_WAVEFORM' in archives_for_channel)
+        self.assertFalse('EXAMPLE:ENUM_SCALAR' in archives_for_channel)
 
     def test_scan_archives_list(self):
         self.archiver.scan_archives(['EXAMPLE:DOUBLE_SCALAR',
                                      'EXAMPLE:ENUM_SCALAR'])
-        channels_found = self.archiver.archives_for_channel.keys()
-        self.assertTrue('EXAMPLE:DOUBLE_SCALAR' in channels_found)
-        self.assertFalse('EXAMPLE:INT_WAVEFORM' in channels_found)
-        self.assertTrue('EXAMPLE:ENUM_SCALAR' in channels_found)
+        archives_for_channel = self.archiver.archives_for_channel.keys()
+        self.assertTrue('EXAMPLE:DOUBLE_SCALAR' in archives_for_channel)
+        self.assertFalse('EXAMPLE:INT_WAVEFORM' in archives_for_channel)
+        self.assertTrue('EXAMPLE:ENUM_SCALAR' in archives_for_channel)
 
     def test_get_scalar(self):
         start = datetime.datetime(2012, 1, 1)
