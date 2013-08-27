@@ -3,6 +3,7 @@
 import datetime
 import calendar
 import re
+from tzlocal import get_localzone
 
 try:
     StrType = basestring
@@ -14,6 +15,7 @@ MINUTES_PER_HOUR = 60
 HOURS_PER_DAY  = 24
 SECONDS_PER_HOUR = MINUTES_PER_HOUR * SECONDS_PER_MINUTE
 SECONDS_PER_DAY = HOURS_PER_DAY * SECONDS_PER_HOUR
+
 
 class UTC(datetime.tzinfo):
     '''UTC timezone with optional offset.'''
@@ -63,10 +65,6 @@ class UTC(datetime.tzinfo):
         return 'UTC({0:+.8g})'.format(total_hours) if total_hours else 'UTC()'
 
 
-def utc_if_no_tzinfo(dt):
-    return dt.replace(tzinfo=UTC()) if dt.tzinfo is None else dt
-
-
 def datetime_from_isoformat(iso_str):
     '''
     Convert a string in ISO 8601 format into a datetime. 
@@ -75,16 +73,19 @@ def datetime_from_isoformat(iso_str):
     '''
 
     match = re.match('^(.*:.*)([\+\-])(\d\d)(?::(\d\d))?$', iso_str)
-    offset = 0
     if match is not None:
         dt_str, tz_sign, tz_hr, tz_min = match.groups(0)
         offset = int(tz_hr) + int(tz_min)/60.
         if tz_sign == '-':
             offset *= -1
+        tz = UTC(offset)
     else:
-        dt_str = iso_str
-    tz = UTC(offset)
-    dt_str = dt_str.replace('T', ' ').rstrip('Z')
+        if iso_str.endswith('Z'):
+            tz = utc
+        else:
+            tz = local_tz
+        dt_str = iso_str.rstrip('Z')
+    dt_str = dt_str.replace('T', ' ')
 
     formats = ['%Y-%m-%d %H:%M:%S.%f',
                '%Y-%m-%d %H:%M:%S',
@@ -115,7 +116,7 @@ def datetime_from_sec_and_nano(seconds, nanoseconds=0, tz=None):
     Note: Some precision will be lost as datetimes only store microseconds.
     '''
     if tz is None:
-        tz = UTC()
+        tz = local_tz
     # We create the datetime in two steps to avoid the weird
     # microsecond rounding behaviour in Python 3.
     dt = datetime.datetime.fromtimestamp(seconds, tz)
@@ -132,12 +133,7 @@ def sec_and_nano_from_datetime(dt):
 
 
 def overlap_between_intervals(first_range_start, first_range_end,
-                                    second_range_start, second_range_end):
-
-    first_range_start = utc_if_no_tzinfo(first_range_start)
-    first_range_end = utc_if_no_tzinfo(first_range_end)
-    second_range_start = utc_if_no_tzinfo(second_range_start)
-    second_range_end = utc_if_no_tzinfo(second_range_end)
+                              second_range_start, second_range_end):
 
     latest_start = max(first_range_start, second_range_start)
     earliest_end = min(first_range_end, second_range_end)
@@ -189,3 +185,7 @@ def pretty_waveform_repr(lst, value_format='{0!r}', max_line_len=79, prefix=''):
         s += pretty_list_repr(sub_lst, value_format, max_line_len, p, max_value_len)
         s += ']' if idx == len(lst) - 1 else ',\n'
     return s
+
+
+utc = UTC()
+local_tz = get_localzone()

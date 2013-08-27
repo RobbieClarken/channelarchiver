@@ -56,13 +56,15 @@ class Archiver(object):
                 channel = archive_details['name']
                 start_time = utils.datetime_from_sec_and_nano(
                         archive_details['start_sec'],
-                        archive_details['start_nano'])
+                        archive_details['start_nano'],
+                        utils.utc)
                 end_time = utils.datetime_from_sec_and_nano(
                         archive_details['end_sec'],
-                        archive_details['end_nano'])
+                        archive_details['end_nano'],
+                        utils.utc)
                 properties = ArchiveProperties(archive_key,
-                                                       start_time,
-                                                       end_time)
+                                               start_time,
+                                               end_time)
                 if list_emptied_for_channel[channel]:
                     self.archives_for_channel[channel].append(properties)
                 else:
@@ -117,7 +119,7 @@ class Archiver(object):
         channels: The channels to get data for. Can be a string or
             list of strings.
         start: Start time as a datetime or ISO 8601 formatted string.
-            If no timezone is specified, assumes UTC.
+            If no timezone is specified, assumes local timezone.
         end: End time as a datetime or ISO 8601 formatted string.
         limit: (optional) Number of data points to aim to retrieve.
             The actual number returned may differ depending on the
@@ -139,7 +141,6 @@ class Archiver(object):
         tz: (optional) The timezone that datetimes should be returned
             in. If omitted, the timezone of start will be used.
         '''
-        
         received_str = isinstance(channels, utils.StrType)
         if received_str:
             channels = [ channels ]
@@ -152,7 +153,13 @@ class Archiver(object):
             end = utils.datetime_from_isoformat(end)
 
         if tz is None:
-            tz = start.tzinfo if start.tzinfo else utils.UTC()
+            tz = start.tzinfo if start.tzinfo else utils.local_tz
+
+        if start.tzinfo is None:
+            start = start.replace(tzinfo=utils.local_tz)
+
+        if end.tzinfo is None:
+            end = end.replace(tzinfo=utils.local_tz)
 
         # Convert datetimes to seconds and nanoseconds for archiver request
         start_sec, start_nano = utils.sec_and_nano_from_datetime(start)

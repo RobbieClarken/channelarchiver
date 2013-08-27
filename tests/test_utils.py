@@ -41,12 +41,12 @@ class TestUtils(unittest.TestCase):
     def test_datetime_isoformat(self):
         iso_str = '2013-08-07 10:21:55.012345'
         dt = utils.datetime_from_isoformat(iso_str)
-        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 12345, utils.UTC()))
+        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 12345, utils.local_tz))
 
     def test_datetime_isoformat_with_T(self):
         iso_str = '2013-08-07T10:21:55.012345'
         dt = utils.datetime_from_isoformat(iso_str)
-        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 12345, utils.UTC()))
+        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 12345, utils.local_tz))
 
     def test_datetime_isoformat_with_Z(self):
         iso_str = '2013-08-07 10:21:55.012345Z'
@@ -64,12 +64,12 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 12345, utils.UTC(8)))
 
     def test_datetime_isoformat_no_ms(self):
-        iso_str = '2013-08-07 10:21:55'
+        iso_str = '2013-08-07 10:21:55Z'
         dt = utils.datetime_from_isoformat(iso_str)
         self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 0, utils.UTC()))
 
     def test_datetime_isoformat_no_secs(self):
-        iso_str = '2013-08-07 10:21'
+        iso_str = '2013-08-07 10:21Z'
         dt = utils.datetime_from_isoformat(iso_str)
         self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 0, 0, utils.UTC()))
 
@@ -81,7 +81,7 @@ class TestUtils(unittest.TestCase):
     def test_datetime_isoformat_no_hrs(self):
         iso_str = '2013-08-07'
         dt = utils.datetime_from_isoformat(iso_str)
-        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 0, 0, 0, 0, utils.UTC()))
+        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 0, 0, 0, 0, utils.local_tz))
 
     def test_datetime_isoformat_bad_str(self):
         iso_str = '09:00 21/08/2103'
@@ -116,18 +116,6 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(nanoseconds, 123456000)
 
     def test_overlap_between_intervals(self):
-        first_range_start = datetime.datetime(2013, 8, 17, 2, 20, 13, 123456)
-        second_range_start = first_range_start + datetime.timedelta(hours=1)
-        second_range_end = first_range_start + datetime.timedelta(hours=2)
-        first_range_end = first_range_start + datetime.timedelta(hours=3)
-
-        overlap = utils.overlap_between_intervals(first_range_start,
-                                                        first_range_end,
-                                                        second_range_start,
-                                                        second_range_end)
-        self.assertEqual(overlap, datetime.timedelta(hours=1))
-
-    def test_overlap_between_intervals_with_tz(self):
         first_range_start = datetime.datetime(2013, 8, 17, 2, 20, 13, 123456, utils.UTC())
         second_range_start = first_range_start + datetime.timedelta(hours=1)
         second_range_end = first_range_start + datetime.timedelta(hours=2)
@@ -144,7 +132,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(overlap, datetime.timedelta(hours=1))
 
     def test_overlap_between_intervals_no_union(self):
-        first_range_start = datetime.datetime(2013, 8, 17, 2, 20, 13, 123456)
+        first_range_start = datetime.datetime(2013, 8, 17, 2, 20, 13, 123456, utils.UTC())
         first_range_end = first_range_start + datetime.timedelta(hours=1)
         second_range_start = first_range_start + datetime.timedelta(hours=2)
         second_range_end = first_range_start + datetime.timedelta(hours=3)
@@ -156,7 +144,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(overlap, datetime.timedelta(0))
 
     def test_overlap_between_intervals_no_subset(self):
-        first_range_start = datetime.datetime(2013, 8, 17, 2, 20, 13, 123456)
+        first_range_start = datetime.datetime(2013, 8, 17, 2, 20, 13, 123456, utils.UTC())
         second_range_start = first_range_start + datetime.timedelta(hours=1)
         first_range_end = first_range_start + datetime.timedelta(hours=2)
         second_range_end = first_range_start + datetime.timedelta(hours=3)

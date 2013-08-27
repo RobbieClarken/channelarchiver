@@ -12,7 +12,9 @@ setup(
     author_email='robbie.clarken@gmail.com',
     url='https://github.com/RobbieClarken/channelarchiver',
     packages=['channelarchiver'],
-    install_requires=[],
+    install_requires=[
+        'tzlocal'
+    ],
     license=open('LICENSE.rst').read(),
     classifiers=[
         'Development Status :: 4 - Beta',

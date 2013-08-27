@@ -61,9 +61,9 @@ Times and timezones
 ~~~~~~~~~~~~~~~~~~~
 
 The start and end times over which to fetch data can be ``datetime``\ s
-or strings in ISO 8601 format (``yyyy-mm-dd HH-MM-SS``).
+or strings in ISO 8601 format (eg ``2013-08-10T21:30:00``).
 
-If no timezone is specified, UTC will be used. If a timezone is given,
+If no timezone is specified, your local timezone will be used. If a timezone is given,
 the returned channel data times will also be in this timezone.
 
 .. code:: python
