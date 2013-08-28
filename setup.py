@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
-from channelarchiver import __version__
 from setuptools import setup
 
 setup(
     name='channelarchiver',
-    version=__version__,
+    version='0.0.3',
     description='Python client for the EPICS Channel Archiver.',
     long_description=open('README.rst').read(),
+    license=open('LICENSE.rst').read(),
     author='Robbie Clarken',
     author_email='robbie.clarken@gmail.com',
     url='https://github.com/RobbieClarken/channelarchiver',
@@ -15,7 +15,6 @@ setup(
     install_requires=[
         'tzlocal'
     ],
-    license=open('LICENSE.rst').read(),
     classifiers=[
         'Development Status :: 4 - Beta',
         'Topic :: Scientific/Engineering',
