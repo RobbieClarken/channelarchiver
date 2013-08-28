@@ -51,7 +51,8 @@ data objects back:
 
 .. code:: python
 
-    >>> x, y = archiver.get(['SR00TUM01:X_TUNE', 'SR00TUM01:Y_TUNE'], '2013-08-24 09:00', '2013-08-24 19:00')
+    >>> channels = ['SR00TUM01:X_TUNE', 'SR00TUM01:Y_TUNE']
+    >>> x, y = archiver.get(channels, '2013-08-24 09:00', '2013-08-24 19:00')
     >>> print x.values
     [ 0.291, 0.290, ..., 0.289]
     >>> print y.values
@@ -60,7 +61,7 @@ data objects back:
 Times and timezones
 ~~~~~~~~~~~~~~~~~~~
 
-The start and end times over which to fetch data can be ``datetime``\ s
+The start and end times over which to fetch data can be datetimes
 or strings in ISO 8601 format (eg ``2013-08-10T21:30:00``).
 
 If no timezone is specified, your local timezone will be used. If a timezone is given,
@@ -68,17 +69,9 @@ the returned channel data times will also be in this timezone.
 
 .. code:: python
 
-    >>> import datetime
-    >>> import pytz
-    >>> tz = pytz.timezone('Australia/Melbourne')
-    >>> start = datetime.datetime(2012, 6, 1, tzinfo=tz)
-    >>> end = datetime.datetime(2012, 6, 30, tzinfo=tz)
-    >>> data = archiver.get('BR00EXS01:TUNNEL_TEMPERATURE_MONITOR', start, end)
-                         time       value      status  severity
-    2012-08-09 11:00:46+10:00  23.8521546  HIHI_ALARM     MAJOR
-    2012-08-09 11:01:32+10:00  23.8737399  HIHI_ALARM     MAJOR
-    2012-08-09 11:02:19+10:00  23.8775618  HIHI_ALARM     MAJOR
-    ...
+    >>> start = datetime.datetime(2012, 6, 1, tzinfo=pytz.UTC)
+    >>> end = datetime.datetime(2012, 6, 30, tzinfo=pytz.UTC)
+    >>> data_in_utc = archiver.get('BR00EXS01:TUNNEL_TEMPERATURE_MONITOR', start, end)
 
 Interpolating
 ~~~~~~~~~~~~~
