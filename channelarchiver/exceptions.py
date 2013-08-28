@@ -5,3 +5,6 @@ class ChannelNotFound(LookupError):
 
 class ChannelKeyMismatch(IndexError):
     '''There should be the same number of keys as channels'''
+
+class NumpyNotInstall(ImportError):
+    '''Numpy must be installed for this operation.'''

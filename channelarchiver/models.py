@@ -1,8 +1,19 @@
 # -*- coding: utf-8 -*-
 
 from collections import namedtuple
+from datetime import datetime
+
 from . import codes
 from . import utils
+from . import exceptions
+
+
+HAS_NUMPY = False
+try:
+    import numpy as np
+    HAS_NUMPY = True
+except ImportError:
+    pass
 
 
 ArchiveProperties = namedtuple('ArchiveProperties',
@@ -63,6 +74,38 @@ class ChannelData(object):
         self.display_precision = display_precision
         self.archive_key = archive_key
         self.interpolation = interpolation
+        self._array = None
+
+    @property
+    def array(self):
+        '''Return the data in a numpy array structure.'''
+
+        if not HAS_NUMPY:
+            raise exceptions.NumpyNotInstall('Numpy not found.')
+
+        # Only compute the array once
+        if self._array is None:
+
+            if self.data_type == codes.data_type.STRING:
+                value_dtype = np.str
+            elif self.data_type == codes.data_type.ENUM:
+                value_dtype = np.uint8
+            elif self.data_type == codes.data_type.INT:
+                value_dtype = np.int
+            else:
+                value_dtype = np.dtype(float)
+
+            dtypes = [('time', np.dtype('datetime64[us]')),
+                      ('value', value_dtype, self.elements),
+                      ('status', np.uint8),
+                      ('severity', np.uint16)]
+
+            data = zip(self.times, self.values,
+                       self.statuses, self.severities)
+
+            self._array = np.array(data, dtype=dtypes)
+
+        return self._array
 
     def __repr__(self):
 
