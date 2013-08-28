@@ -98,10 +98,8 @@ class ChannelData(object):
         return s
 
     def __str__(self):
-        times = ['time'] + [
-                    dt.replace(microsecond=0)
-                    .isoformat(' ').replace('+00:00', '')
-                        for dt in self.times]
+        times = ['time'] + [dt.strftime('%Y-%m-%d %H:%M:%S')
+                            for dt in self.times]
         statuses = ['status'] + \
                 list(map(codes.status.str_value, self.statuses))
         severities = ['severity'] + \

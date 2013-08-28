@@ -94,18 +94,17 @@ class TestChannelData(unittest.TestCase):
                  '2012-07-13 11:18:55  196.1  LOLO_ALARM     MAJOR'))
 
     def test_array_str(self):
+
         channel_data = self.array_channel
         self.assertEqual(
             str(channel_data),
-            ('                     time                           value     status  severity\n'
-             '2012-07-12 21:47:23+10:00  [  0,   1,   2,   3,   4,   5,   NO_ALARM  NO_ALARM\n'
-             '                              6,   7,   8,   9,  10,  11,                     \n'
-             '                             12,  13,  14,  15,  16,  17,                     \n'
-             '                             18,  19]                                         \n'
-             '2012-07-13 02:05:01+10:00  [100,  99,  98,  97,  96,  95,  LOW_ALARM     MINOR\n'
-             '                             94,  93,  92,  91,  90,  89,                     \n'
-             '                             88,  87,  86,  85,  84,  83,                     \n'
-             '                             82,  81]')
+            ('               time                                value     status  severity\n'
+             '2012-07-12 21:47:23  [  0,   1,   2,   3,   4,   5,   6,   NO_ALARM  NO_ALARM\n'
+             '                        7,   8,   9,  10,  11,  12,  13,                     \n'
+             '                       14,  15,  16,  17,  18,  19]                          \n'
+             '2012-07-13 02:05:01  [100,  99,  98,  97,  96,  95,  94,  LOW_ALARM     MINOR\n'
+             '                       93,  92,  91,  90,  89,  88,  87,                     \n'
+             '                       86,  85,  84,  83,  82,  81]')
         )
 
 if __name__ == '__main__':
