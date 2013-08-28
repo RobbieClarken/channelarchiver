@@ -104,9 +104,9 @@ class ChannelData(object):
                 list(map(codes.status.str_value, self.statuses))
         severities = ['severity'] + \
                 list(map(codes.severity.str_value, self.severities))
-        times_len = max(map(len, times))
-        statuses_len = max(map(len, statuses))
-        severities_len = max(map(len, severities))
+        times_len = len(max(times, key=len))
+        statuses_len = len(max(statuses, key=len))
+        severities_len = len(max(severities, key=len))
         s = ''
         value_format = '{0:.9g}'
         if self.elements == 1:
@@ -123,7 +123,7 @@ class ChannelData(object):
                                     min_value_len=max_value_len)
                 values += formatted_value.split('\n')
 
-        values_len = max(map(len, values))
+        values_len = len(max(values, key=len))
         spec = ('{0:>' + str(times_len) + '}  '
                 '{1:>' + str(values_len) + '}  '
                 '{2:>' + str(statuses_len) + '}  '
