@@ -4,6 +4,7 @@
 import unittest
 import datetime
 from channelarchiver import utils
+import pytz
 
 class AEST(datetime.tzinfo):
 
@@ -13,6 +14,7 @@ class AEST(datetime.tzinfo):
     def dst(self, dt):
         return datetime.timedelta(0)
 
+melbourne_tz = pytz.timezone('Australia/Melbourne')
 
 class TestUtils(unittest.TestCase):
     def test_utc(self):
@@ -41,17 +43,31 @@ class TestUtils(unittest.TestCase):
     def test_datetime_isoformat(self):
         iso_str = '2013-08-07 10:21:55.012345'
         dt = utils.datetime_from_isoformat(iso_str)
-        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 12345, utils.local_tz))
+        dt_correct = utils.local_tz.localize(datetime.datetime(2013, 8, 7, 10, 21, 55, 12345))
+        self.assertEqual(dt, dt_correct)
+
+    def test_datetime_isoformat_with_dst(self):
+        iso_str = '2013-02-07 10:21:55.012345'
+
+        local_tz = utils.local_tz
+        utils.local_tz = melbourne_tz
+        dt = utils.datetime_from_isoformat(iso_str)
+        utils.local_tz = local_tz
+
+        self.assertEqual(dt.utcoffset(), datetime.timedelta(0, 39600))
+        dt_correct = melbourne_tz.localize(datetime.datetime(2013, 2, 7, 10, 21, 55, 12345))
+        self.assertEqual(dt, dt_correct)
 
     def test_datetime_isoformat_with_T(self):
         iso_str = '2013-08-07T10:21:55.012345'
         dt = utils.datetime_from_isoformat(iso_str)
-        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 12345, utils.local_tz))
+        dt_correct = utils.local_tz.localize(datetime.datetime(2013, 8, 7, 10, 21, 55, 12345))
+        self.assertEqual(dt, dt_correct)
 
     def test_datetime_isoformat_with_Z(self):
         iso_str = '2013-08-07 10:21:55.012345Z'
         dt = utils.datetime_from_isoformat(iso_str)
-        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 12345, utils.UTC()))
+        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 12345, utils.utc))
 
     def test_datetime_isoformat_with_tz(self):
         iso_str = '2013-08-07 10:21:55.012345+10:00'
@@ -66,12 +82,12 @@ class TestUtils(unittest.TestCase):
     def test_datetime_isoformat_no_ms(self):
         iso_str = '2013-08-07 10:21:55Z'
         dt = utils.datetime_from_isoformat(iso_str)
-        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 0, utils.UTC()))
+        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 55, 0, utils.utc))
 
     def test_datetime_isoformat_no_secs(self):
         iso_str = '2013-08-07 10:21Z'
         dt = utils.datetime_from_isoformat(iso_str)
-        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 0, 0, utils.UTC()))
+        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 10, 21, 0, 0, utils.utc))
 
     def test_datetime_isoformat_no_secs_tz(self):
         iso_str = '2013-08-07 10:21-09:00'
@@ -81,7 +97,8 @@ class TestUtils(unittest.TestCase):
     def test_datetime_isoformat_no_hrs(self):
         iso_str = '2013-08-07'
         dt = utils.datetime_from_isoformat(iso_str)
-        self.assertEqual(dt, datetime.datetime(2013, 8, 7, 0, 0, 0, 0, utils.local_tz))
+        dt_correct = utils.local_tz.localize(datetime.datetime(2013, 8, 7, 0, 0, 0, 0))
+        self.assertEqual(dt, dt_correct)
 
     def test_datetime_isoformat_bad_str(self):
         iso_str = '09:00 21/08/2103'
@@ -94,7 +111,14 @@ class TestUtils(unittest.TestCase):
         nanoseconds = 123456789
         dt = utils.datetime_from_sec_and_nano(seconds, nanoseconds)
         # Note nanoseconds get rounded off in conversion to microseconds
-        self.assertEqual(dt, datetime.datetime(2013, 8, 17, 2, 20, 13, 123457, utils.UTC()))
+        self.assertEqual(dt, datetime.datetime(2013, 8, 17, 2, 20, 13, 123457, utils.utc))
+
+    def test_datetime_from_sec_and_nano_with_utc(self):
+        seconds = 1342129643
+        nanoseconds = 123456789
+        dt = utils.datetime_from_sec_and_nano(seconds, nanoseconds, utils.utc)
+        # Note nanoseconds get rounded off in conversion to microseconds
+        self.assertEqual(dt, datetime.datetime(2012, 7, 12, 21, 47, 23, 123457, utils.utc))
 
     def test_datetime_from_sec_and_nano_with_tz(self):
         seconds = 1376706013
@@ -102,6 +126,14 @@ class TestUtils(unittest.TestCase):
         tz = AEST()
         dt = utils.datetime_from_sec_and_nano(seconds, nanoseconds, tz)
         self.assertEqual(dt, datetime.datetime(2013, 8, 17, 12, 20, 13, 123457, AEST()))
+
+    def test_datetime_from_sec_and_nano_with_dst(self):
+        seconds = 1392663073
+        nanoseconds = 987654321
+        dt = utils.datetime_from_sec_and_nano(seconds, nanoseconds, melbourne_tz)
+        dt_correct = melbourne_tz.localize(datetime.datetime(2014, 2, 18, 5, 51, 13, 987654))
+        self.assertEqual(dt, dt_correct)
+        self.assertEqual(dt.utcoffset(), datetime.timedelta(0, 39600))
         
     def test_sec_and_nano_from_datetime(self):
         dt = datetime.datetime(2013, 8, 17, 2, 20, 13, 123456)
@@ -116,7 +148,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(nanoseconds, 123456000)
 
     def test_overlap_between_intervals(self):
-        first_range_start = datetime.datetime(2013, 8, 17, 2, 20, 13, 123456, utils.UTC())
+        first_range_start = datetime.datetime(2013, 8, 17, 2, 20, 13, 123456, utils.utc)
         second_range_start = first_range_start + datetime.timedelta(hours=1)
         second_range_end = first_range_start + datetime.timedelta(hours=2)
         first_range_end = first_range_start + datetime.timedelta(hours=3)
@@ -132,7 +164,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(overlap, datetime.timedelta(hours=1))
 
     def test_overlap_between_intervals_no_union(self):
-        first_range_start = datetime.datetime(2013, 8, 17, 2, 20, 13, 123456, utils.UTC())
+        first_range_start = datetime.datetime(2013, 8, 17, 2, 20, 13, 123456, utils.utc)
         first_range_end = first_range_start + datetime.timedelta(hours=1)
         second_range_start = first_range_start + datetime.timedelta(hours=2)
         second_range_end = first_range_start + datetime.timedelta(hours=3)
@@ -144,7 +176,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(overlap, datetime.timedelta(0))
 
     def test_overlap_between_intervals_no_subset(self):
-        first_range_start = datetime.datetime(2013, 8, 17, 2, 20, 13, 123456, utils.UTC())
+        first_range_start = datetime.datetime(2013, 8, 17, 2, 20, 13, 123456, utils.utc)
         second_range_start = first_range_start + datetime.timedelta(hours=1)
         first_range_end = first_range_start + datetime.timedelta(hours=2)
         second_range_end = first_range_start + datetime.timedelta(hours=3)

@@ -56,6 +56,9 @@ class UTC(datetime.tzinfo):
             spec = 'UTC{sign}{hours:02d}:{minutes:02d}'
         return spec.format(**components)
 
+    def localize(self, dt):
+        return dt.replace(tzinfo=self)
+
     def __str__(self):
         return self.tzname()
 
@@ -63,6 +66,17 @@ class UTC(datetime.tzinfo):
         total_hours = HOURS_PER_DAY * self.offset.days + \
                       float(self.offset.seconds) / SECONDS_PER_HOUR
         return 'UTC({0:+.8g})'.format(total_hours) if total_hours else 'UTC()'
+
+
+def localize_datetime(dt, tz):
+    '''
+    Localize a timezone naive datetime. Handles pytz timezones correctly.
+    '''
+
+    try:
+        return tz.localize(dt)
+    except AttributeError:
+        return dt.replace(tzinfo=tz)
 
 
 def datetime_from_isoformat(iso_str):
@@ -106,21 +120,23 @@ def datetime_from_isoformat(iso_str):
     if dt is None:
         raise ValueError(('{0} is not a recognized '
                           'datetime format').format(iso_str))
-    dt = dt.replace(tzinfo=tz)
+    dt = tz.localize(dt)
     return dt
+
 
 def datetime_from_sec_and_nano(seconds, nanoseconds=0, tz=None):
     '''
     Convert seconds and nanoseconds since the Epoch into a datetime with given timezone.
-    If tz is not specified, UTC will be used.
+    If tz is not specified, the local timezone will be used.
     Note: Some precision will be lost as datetimes only store microseconds.
     '''
     if tz is None:
         tz = local_tz
     # We create the datetime in two steps to avoid the weird
     # microsecond rounding behaviour in Python 3.
-    dt = datetime.datetime.fromtimestamp(seconds, tz)
-    return dt.replace(microsecond=int(round(1.e-3 * nanoseconds)))
+    dt = datetime.datetime.fromtimestamp(seconds, utc)
+    dt = dt.replace(microsecond=int(round(1.e-3 * nanoseconds)))
+    return dt.astimezone(tz)
 
 
 def sec_and_nano_from_datetime(dt):
@@ -169,6 +185,7 @@ def pretty_list_repr(lst, value_format='{0!r}', max_line_len=79, prefix='',
         s += ']' if line == lines - 1 else ',\n'
     return s
 
+
 def max_value_len_in_waveform(lst, value_format='{0!r}'):
     max_value_len = 0
     for sub_lst in lst:
@@ -176,6 +193,7 @@ def max_value_len_in_waveform(lst, value_format='{0!r}'):
         sub_max_val_len = len(max(sub_lst, key=len))
         max_value_len = max(max_value_len, sub_max_val_len)
     return max_value_len
+
 
 def pretty_waveform_repr(lst, value_format='{0!r}', max_line_len=79, prefix=''):
     max_value_len = max_value_len_in_waveform(lst, value_format)

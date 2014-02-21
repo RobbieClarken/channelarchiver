@@ -141,6 +141,7 @@ class Archiver(object):
         tz: (optional) The timezone that datetimes should be returned
             in. If omitted, the timezone of start will be used.
         '''
+
         received_str = isinstance(channels, utils.StrType)
         if received_str:
             channels = [ channels ]
@@ -153,10 +154,10 @@ class Archiver(object):
             end = utils.datetime_from_isoformat(end)
 
         if start.tzinfo is None:
-            start = start.replace(tzinfo=utils.local_tz)
+            start = utils.localize_datetime(start, utils.local_tz)
 
         if end.tzinfo is None:
-            end = end.replace(tzinfo=utils.local_tz)
+            end = utils.localize_datetime(end, utils.local_tz)
 
         if tz is None:
             tz = start.tzinfo
