@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='channelarchiver',
-    version='0.0.3',
+    version='0.0.4',
     description='Python client for the EPICS Channel Archiver.',
     long_description=open('README.rst').read(),
     license=open('LICENSE.rst').read(),

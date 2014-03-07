@@ -18,3 +18,6 @@ class Codes(object):
         constants_str = ', '.join('{0}={1!r}'.format(v, k) for k, v
                                   in sorted(self._reverse_dict.items()))
         return 'Codes({0})'.format(constants_str)
+
+    def __getitem__(self, key):
+        return self.__dict__[key.replace('-', '_').upper()]

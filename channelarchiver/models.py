@@ -81,7 +81,7 @@ class ChannelData(object):
         '''Return the data in a numpy array structure.'''
 
         if not HAS_NUMPY:
-            raise exceptions.NumpyNotInstall('Numpy not found.')
+            raise exceptions.NumpyNotInstalled('Numpy not found.')
 
         # Only compute the array once
         if self._array is None:

@@ -86,6 +86,14 @@ class TestArchiver(unittest.TestCase):
         self.assertEqual(channel_data.severities, [0, 1, 1, 2])
         self.assertEqual(repr(channel_data.times[0].tzinfo), 'UTC()')
 
+    def test_get_interpolation_string(self):
+        start = datetime.datetime(2012, 1, 1, tzinfo=utc)
+        end = datetime.datetime(2013, 1, 1, tzinfo=utc)
+        channel_data = self.archiver.get('EXAMPLE:DOUBLE_SCALAR', start, end,
+                                         interpolation='raw')
+        self.assertEqual(channel_data.channel, 'EXAMPLE:DOUBLE_SCALAR')
+        self.assertEqual(channel_data.values, [ 200.5, 199.9, 198.7, 196.1 ])
+
     def test_get_scalar_str(self):
         start = datetime.datetime(2012, 1, 1, tzinfo=utc)
         end = datetime.datetime(2013, 1, 1, tzinfo=utc)

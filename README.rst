@@ -78,20 +78,18 @@ Interpolating
 
 You can control how much data is returned from the archiver with the
 ``limit`` parameter. This is roughly equal to how many data points will
-be returned but the actual value will differ depending on how data is
+be returned but the actual value will differ depending on how much data is
 available and the interpolation method.
 
-The interpolation is determined by the ``interpolation`` parameter. The
-allowed values are the constants in
-``channelarchiver.codes.interpolation``: ``RAW``, ``SPREADSHEET``,
-``AVERAGED``, ``PLOT_BINNING`` and ``LINEAR``. The default value is
-``LINEAR``.
+The interpolation method is determined by the ``interpolation`` parameter. The
+allowed values are the ``'raw'``, ``'spreadsheet'``, ``'averaged'``, ``'plot-binning'``
+and ``'linear'``. The default value is ``'linear'``.
 
 .. code:: python
 
     >>> from channelarchiver import codes
     >>> channel = 'SR00MOS01:FREQUENCY_MONITOR'
-    >>> data = archiver.get(channel, '2012', '2013', limit=10000, interpolation=codes.interpolation.RAW)
+    >>> data = archiver.get(channel, '2012', '2013', limit=10000, interpolation='raw')
 
 Speeding up data retrieval
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

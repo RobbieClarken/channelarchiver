@@ -111,7 +111,7 @@ class Archiver(object):
         return channel_data
 
     def get(self, channels, start, end, limit=1000,
-               interpolation=codes.interpolation.LINEAR,
+               interpolation='linear',
                scan_archives=True, archive_keys=None, tz=None):
         '''
         Retrieves archived.
@@ -126,9 +126,8 @@ class Archiver(object):
             number of points in the archive, the interpolation method
             and the maximum allowed points set by the archiver.
         interpolation: (optional) Method of interpolating the data.
-            Should be one of RAW, SPREADSHEET, AVERAGED, PLOT_BINNING
-            or LINEAR from the codes.interpolate object.
-            Default: LINEAR
+            Should be one of 'raw', 'spreadsheet', 'averaged',
+            'plot-binning' or 'linear'.
         scan_archives: (optional) Whether or not to perform a scan to
             determine which archives the channels are on. If this is to
             be False .scan_archives() should have been called prior to
@@ -152,6 +151,8 @@ class Archiver(object):
             start = utils.datetime_from_isoformat(start)
         if isinstance(end, utils.StrType):
             end = utils.datetime_from_isoformat(end)
+        if isinstance(interpolation, utils.StrType):
+            interpolation = codes.interpolation[interpolation]
 
         if start.tzinfo is None:
             start = utils.localize_datetime(start, utils.local_tz)
