@@ -135,7 +135,10 @@ def datetime_from_sec_and_nano(seconds, nanoseconds=0, tz=None):
     # We create the datetime in two steps to avoid the weird
     # microsecond rounding behaviour in Python 3.
     dt = datetime.datetime.fromtimestamp(seconds, utc)
-    dt = dt.replace(microsecond=int(round(1.e-3 * nanoseconds)))
+    if nanoseconds < 999999500:
+        dt = dt.replace(microsecond=int(round(1.e-3 * nanoseconds)))
+    else:
+        dt = datetime.datetime.fromtimestamp(seconds+1, utc)
     return dt.astimezone(tz)
 
 
