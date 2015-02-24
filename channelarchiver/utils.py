@@ -81,7 +81,7 @@ def localize_datetime(dt, tz):
 
 def datetime_from_isoformat(iso_str):
     '''
-    Convert a string in ISO 8601 format into a datetime. 
+    Convert a string in ISO 8601 format into a datetime.
     iso_str: String in ISO 8601 format. Examples:
         '2013-08-19T14:29Z', '2013-08-19 14:29+10:00'
     '''

@@ -30,13 +30,13 @@ class Archiver(object):
         self.server = Server(host)
         self.archiver = self.server.archiver
         self.archives_for_channel = defaultdict(list)
-    
+
     def scan_archives(self, channels=None):
         '''
         Determine which archives contain the specified channels. This
         can be called prior to calling .get() with scan_archives=False
         to speed up data retrieval.
-        
+
         channels: (optional) The channel names to scan for. Can be a
             string or list of strings.
             If omitted, all channels will be scanned for.
@@ -169,7 +169,7 @@ class Archiver(object):
 
         if scan_archives:
             self.scan_archives(channels)
-        
+
         if archive_keys is None:
             channels_for_key = defaultdict(list)
             for channel in channels:
@@ -201,9 +201,9 @@ class Archiver(object):
             channels_for_key = dict(
                     (key, list(value)) for key, value in group_by_iter
             )
-        
+
         return_data = [ None ] * len(channels)
-        
+
         for archive_key, channels_on_archive in channels_for_key.items():
             data = self.archiver.values(archive_key, channels_on_archive,
                                         start_sec, start_nano,

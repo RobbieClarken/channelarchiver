@@ -15,7 +15,9 @@ data_dir = os.path.join(tests_dir, 'data')
 
 def read_data(filename):
     path = os.path.join(data_dir, filename + '.json')
-    return json.loads(open(path).read())
+    with open(path) as f:
+        data = json.load(f)
+    return data
 
 def check_type(value, check_type, expected_name):
     if not isinstance(value, check_type):
@@ -30,7 +32,7 @@ class MockArchiver(object):
 
     Loads data for a mock archiver with the following archives and
     channels:
-    
+
     1001
         * EXAMPLE:DOUBLE_SCALAR
             - 2012-07-12 21:47:23.663999895: 200.5

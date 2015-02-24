@@ -58,7 +58,7 @@ class TestChannelData(unittest.TestCase):
                                          alarm_limits = Limits(198, 220),
                                          display_precision = 3,
                                          archive_key = 1001)
-    
+
     def test_get_properties(self):
 
         channel_data = self.scalar_channel

@@ -141,7 +141,7 @@ class TestUtils(unittest.TestCase):
         dt_correct = melbourne_tz.localize(datetime.datetime(2014, 2, 18, 5, 51, 13, 987654))
         self.assertEqual(dt, dt_correct)
         self.assertEqual(dt.utcoffset(), datetime.timedelta(0, 39600))
-        
+
     def test_sec_and_nano_from_datetime(self):
         dt = datetime.datetime(2013, 8, 17, 2, 20, 13, 123456)
         seconds, nanoseconds = utils.sec_and_nano_from_datetime(dt)

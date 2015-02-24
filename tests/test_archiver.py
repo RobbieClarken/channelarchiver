@@ -12,7 +12,7 @@ local_tz = utils.local_tz
 
 
 class TestArchiver(unittest.TestCase):
-    
+
     def setUp(self):
         self.archiver = Archiver('http://fake')
         self.archiver.archiver = MockArchiver()
