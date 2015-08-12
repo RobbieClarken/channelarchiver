@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/RobbieClarken/channelarchiver.svg
+    :target: https://travis-ci.org/RobbieClarken/channelarchiver
+
 A python client for retrieving data from an EPICS Channel Archiver.
 
 To get started just import the ``Archiver`` class and specify the
