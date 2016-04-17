@@ -2,7 +2,7 @@
 
 try:
     from xmlrpclib import Server
-except ImportError: # Python 3
+except ImportError:  # Python 3
     from xmlrpc.client import Server
 
 from collections import defaultdict
@@ -45,7 +45,7 @@ class Archiver(object):
         if channels is None:
             channels = []
         elif isinstance(channels, utils.StrType):
-            channels = [ channels ]
+            channels = [channels]
 
         channel_pattern = '|'.join(channels)
         list_emptied_for_channel = defaultdict(bool)
@@ -68,7 +68,7 @@ class Archiver(object):
                 if list_emptied_for_channel[channel]:
                     self.archives_for_channel[channel].append(properties)
                 else:
-                    self.archives_for_channel[channel][:] = [ properties ]
+                    self.archives_for_channel[channel][:] = [properties]
                     list_emptied_for_channel[channel] = True
 
     def _parse_values(self, archive_data, tz):
@@ -111,8 +111,8 @@ class Archiver(object):
         return channel_data
 
     def get(self, channels, start, end, limit=1000,
-               interpolation='linear',
-               scan_archives=True, archive_keys=None, tz=None):
+            interpolation='linear',
+            scan_archives=True, archive_keys=None, tz=None):
         '''
         Retrieves archived.
 
@@ -143,9 +143,9 @@ class Archiver(object):
 
         received_str = isinstance(channels, utils.StrType)
         if received_str:
-            channels = [ channels ]
+            channels = [channels]
             if archive_keys is not None:
-                archive_keys = [ archive_keys ]
+                archive_keys = [archive_keys]
 
         if isinstance(start, utils.StrType):
             start = utils.datetime_from_isoformat(start)
@@ -202,7 +202,7 @@ class Archiver(object):
                     (key, list(value)) for key, value in group_by_iter
             )
 
-        return_data = [ None ] * len(channels)
+        return_data = [None] * len(channels)
 
         for archive_key, channels_on_archive in channels_for_key.items():
             data = self.archiver.values(archive_key, channels_on_archive,

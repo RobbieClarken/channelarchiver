@@ -16,7 +16,7 @@ You then fetch data with the ``archiver.get()`` method:
 .. code:: python
 
     >>> data = archiver.get('SR00IE01:INJECTION_EFFICIENCY_MONITOR', '2013-08-11', '2013-08-12')
-    >>> print data
+    >>> print(data)
                    time        value     status      severity
     2013-08-11 00:00:02   96.9351518   NO_ALARM      NO_ALARM
     2013-08-11 00:04:20   94.5171233   NO_ALARM      NO_ALARM
@@ -56,10 +56,10 @@ data objects back:
 
     >>> channels = ['SR00TUM01:X_TUNE', 'SR00TUM01:Y_TUNE']
     >>> x, y = archiver.get(channels, '2013-08-24 09:00', '2013-08-24 19:00')
-    >>> print x.values
-    [ 0.291, 0.290, ..., 0.289]
-    >>> print y.values
-    [ 0.216, 0.217, ..., 0.213]
+    >>> print(x.values)
+    [0.291, 0.290, ..., 0.289]
+    >>> print(y.values)
+    [0.216, 0.217, ..., 0.213]
 
 Times and timezones
 ~~~~~~~~~~~~~~~~~~~

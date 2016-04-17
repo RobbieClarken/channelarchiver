@@ -7,12 +7,12 @@ from tzlocal import get_localzone
 
 try:
     StrType = basestring
-except NameError: # Python 3
+except NameError:  # Python 3
     StrType = str
 
 SECONDS_PER_MINUTE = 60
 MINUTES_PER_HOUR = 60
-HOURS_PER_DAY  = 24
+HOURS_PER_DAY = 24
 SECONDS_PER_HOUR = MINUTES_PER_HOUR * SECONDS_PER_MINUTE
 SECONDS_PER_DAY = HOURS_PER_DAY * SECONDS_PER_HOUR
 

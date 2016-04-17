@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from collections import namedtuple
-from datetime import datetime
 
 from . import codes
 from . import utils
@@ -143,10 +142,8 @@ class ChannelData(object):
     def __str__(self):
         times = ['time'] + [dt.strftime('%Y-%m-%d %H:%M:%S')
                             for dt in self.times]
-        statuses = ['status'] + \
-                list(map(codes.status.str_value, self.statuses))
-        severities = ['severity'] + \
-                list(map(codes.severity.str_value, self.severities))
+        statuses = ['status'] + list(map(codes.status.str_value, self.statuses))
+        severities = ['severity'] + list(map(codes.severity.str_value, self.severities))
         times_len = len(max(times, key=len))
         statuses_len = len(max(statuses, key=len))
         severities_len = len(max(severities, key=len))

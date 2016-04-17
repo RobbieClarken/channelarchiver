@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 class Codes(object):
     def __init__(self, **kws):
         self._reverse_dict = {}

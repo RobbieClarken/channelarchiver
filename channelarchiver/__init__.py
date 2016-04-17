@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from .channelarchiver import Archiver
+from . import codes
+
 '''
 channelarchiver is a library for retrieving data from an EPICS Channel
 Archiver. It does the hard work of figuring out which archives contain
@@ -22,6 +25,4 @@ __title__ = 'channelarchiver'
 __version_info__ = (0, 0, 5)
 __version__ = '.'.join(map(str, __version_info__))
 __license__ = 'MIT'
-
-from .channelarchiver import Archiver
-from . import codes
+__all__ = [Archiver, codes]

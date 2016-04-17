@@ -5,7 +5,7 @@ import unittest
 from channelarchiver import Archiver,  codes, utils, exceptions
 from channelarchiver.models import ChannelData, ArchiveProperties
 from .mock_archiver import MockArchiver
-import datetime
+from datetime import datetime
 
 utc = utils.UTC()
 local_tz = utils.local_tz
@@ -29,24 +29,24 @@ class TestArchiver(unittest.TestCase):
                 'EXAMPLE:DOUBLE_SCALAR': [
                     ArchiveProperties(
                         key=1001,
-                        start_time=datetime.datetime(2012, 7, 12, 21, 47, 23, 664000, tzinfo=utc),
-                        end_time=datetime.datetime(2012, 7, 13, 11, 18, 55, 671259, tzinfo=utc)
+                        start_time=datetime(2012, 7, 12, 21, 47, 23, 664000, tzinfo=utc),
+                        end_time=datetime(2012, 7, 13, 11, 18, 55, 671259, tzinfo=utc)
                     )
-                 ],
-                 'EXAMPLE:INT_WAVEFORM': [
-                     ArchiveProperties(
-                         key=1001,
-                         start_time=datetime.datetime(2012, 7, 12, 23, 14, 19, 129600, tzinfo=utc),
-                         end_time=datetime.datetime(2012, 7, 13, 8, 26, 18, 558211, tzinfo=utc)
-                     )
-                 ],
-                 'EXAMPLE:ENUM_SCALAR': [
-                     ArchiveProperties(
-                         key=1008,
-                         start_time=datetime.datetime(2012, 7, 12, 22, 41, 10, 765676, tzinfo=utc),
-                         end_time=datetime.datetime(2012, 7, 13, 9, 20, 23, 623789, tzinfo=utc)
-                     )
-                 ]
+                ],
+                'EXAMPLE:INT_WAVEFORM': [
+                    ArchiveProperties(
+                        key=1001,
+                        start_time=datetime(2012, 7, 12, 23, 14, 19, 129600, tzinfo=utc),
+                        end_time=datetime(2012, 7, 13, 8, 26, 18, 558211, tzinfo=utc)
+                    )
+                ],
+                'EXAMPLE:ENUM_SCALAR': [
+                    ArchiveProperties(
+                        key=1008,
+                        start_time=datetime(2012, 7, 12, 22, 41, 10, 765676, tzinfo=utc),
+                        end_time=datetime(2012, 7, 13, 9, 20, 23, 623789, tzinfo=utc)
+                    )
+                ]
             }
         )
 
@@ -66,8 +66,8 @@ class TestArchiver(unittest.TestCase):
         self.assertTrue('EXAMPLE:ENUM_SCALAR' in archives_for_channel)
 
     def test_get_scalar(self):
-        start = datetime.datetime(2012, 1, 1, tzinfo=utc)
-        end = datetime.datetime(2013, 1, 1, tzinfo=utc)
+        start = datetime(2012, 1, 1, tzinfo=utc)
+        end = datetime(2013, 1, 1, tzinfo=utc)
         data = self.archiver.get(['EXAMPLE:DOUBLE_SCALAR'], start, end,
                                  interpolation=codes.interpolation.RAW)
         self.assertTrue(isinstance(data, list))
@@ -75,37 +75,37 @@ class TestArchiver(unittest.TestCase):
         self.assertEqual(channel_data.channel, 'EXAMPLE:DOUBLE_SCALAR')
         self.assertEqual(channel_data.data_type, codes.data_type.DOUBLE)
         self.assertEqual(channel_data.elements, 1)
-        self.assertEqual(channel_data.values, [ 200.5, 199.9, 198.7, 196.1 ])
+        self.assertEqual(channel_data.values, [200.5, 199.9, 198.7, 196.1])
         self.assertEqual(channel_data.times, [
-            datetime.datetime(2012, 7, 12, 21, 47, 23, 664000, utc),
-            datetime.datetime(2012, 7, 13, 2, 5, 1, 443589, utc),
-            datetime.datetime(2012, 7, 13, 7, 19, 31, 806097, utc),
-            datetime.datetime(2012, 7, 13, 11, 18, 55, 671259, utc)
+            datetime(2012, 7, 12, 21, 47, 23, 664000, utc),
+            datetime(2012, 7, 13, 2, 5, 1, 443589, utc),
+            datetime(2012, 7, 13, 7, 19, 31, 806097, utc),
+            datetime(2012, 7, 13, 11, 18, 55, 671259, utc)
         ])
         self.assertEqual(channel_data.statuses, [0, 6, 6, 5])
         self.assertEqual(channel_data.severities, [0, 1, 1, 2])
         self.assertEqual(repr(channel_data.times[0].tzinfo), 'UTC()')
 
     def test_get_interpolation_string(self):
-        start = datetime.datetime(2012, 1, 1, tzinfo=utc)
-        end = datetime.datetime(2013, 1, 1, tzinfo=utc)
+        start = datetime(2012, 1, 1, tzinfo=utc)
+        end = datetime(2013, 1, 1, tzinfo=utc)
         channel_data = self.archiver.get('EXAMPLE:DOUBLE_SCALAR', start, end,
                                          interpolation='raw')
         self.assertEqual(channel_data.channel, 'EXAMPLE:DOUBLE_SCALAR')
-        self.assertEqual(channel_data.values, [ 200.5, 199.9, 198.7, 196.1 ])
+        self.assertEqual(channel_data.values, [200.5, 199.9, 198.7, 196.1])
 
     def test_get_scalar_str(self):
-        start = datetime.datetime(2012, 1, 1, tzinfo=utc)
-        end = datetime.datetime(2013, 1, 1, tzinfo=utc)
+        start = datetime(2012, 1, 1, tzinfo=utc)
+        end = datetime(2013, 1, 1, tzinfo=utc)
         channel_data = self.archiver.get('EXAMPLE:DOUBLE_SCALAR', start, end,
-                                        interpolation=codes.interpolation.RAW)
+                                         interpolation=codes.interpolation.RAW)
         self.assertTrue(isinstance(channel_data, ChannelData))
         self.assertEqual(channel_data.channel, 'EXAMPLE:DOUBLE_SCALAR')
         self.assertEqual(channel_data.data_type, codes.data_type.DOUBLE)
 
     def test_get_scalar_in_tz(self):
-        start = datetime.datetime(2012, 1, 1, tzinfo=utc)
-        end = datetime.datetime(2013, 1, 1, tzinfo=utc)
+        start = datetime(2012, 1, 1, tzinfo=utc)
+        end = datetime(2013, 1, 1, tzinfo=utc)
         data = self.archiver.get('EXAMPLE:DOUBLE_SCALAR', start, end,
                                  interpolation=codes.interpolation.RAW,
                                  tz=utils.UTC(11.5))
@@ -113,8 +113,8 @@ class TestArchiver(unittest.TestCase):
         self.assertEqual(repr(data.times[0].tzinfo), 'UTC(+11.5)')
 
     def test_get_without_scan(self):
-        start = datetime.datetime(2012, 1, 1, tzinfo=utc)
-        end = datetime.datetime(2013, 1, 1, tzinfo=utc)
+        start = datetime(2012, 1, 1, tzinfo=utc)
+        end = datetime(2013, 1, 1, tzinfo=utc)
         self.assertRaises(exceptions.ChannelNotFound,
                           self.archiver.get, ['EXAMPLE:DOUBLE_SCALAR'],
                           start, end,
@@ -122,25 +122,25 @@ class TestArchiver(unittest.TestCase):
                           scan_archives=False)
 
     def test_get_with_restrictive_interval(self):
-        start = datetime.datetime(2012, 7, 13, tzinfo=utc)
-        end = datetime.datetime(2012, 7, 13, 10, tzinfo=utc)
+        start = datetime(2012, 7, 13, tzinfo=utc)
+        end = datetime(2012, 7, 13, 10, tzinfo=utc)
         channel_data = self.archiver.get('EXAMPLE:DOUBLE_SCALAR', start, end,
                                          interpolation=codes.interpolation.RAW)
-        self.assertEqual(channel_data.values, [ 199.9, 198.7 ])
+        self.assertEqual(channel_data.values, [199.9, 198.7])
         self.assertEqual(channel_data.times, [
-            datetime.datetime(2012, 7, 13, 2, 5, 1, 443589, utc),
-            datetime.datetime(2012, 7, 13, 7, 19, 31, 806097, utc)
+            datetime(2012, 7, 13, 2, 5, 1, 443589, utc),
+            datetime(2012, 7, 13, 7, 19, 31, 806097, utc)
         ])
 
     def test_get_with_restrictive_interval_with_tzs(self):
-        start = datetime.datetime(2012, 7, 13, 10, tzinfo=utils.UTC(10))
-        end = datetime.datetime(2012, 7, 13, 20, tzinfo=utils.UTC(10))
+        start = datetime(2012, 7, 13, 10, tzinfo=utils.UTC(10))
+        end = datetime(2012, 7, 13, 20, tzinfo=utils.UTC(10))
         channel_data = self.archiver.get('EXAMPLE:DOUBLE_SCALAR', start, end,
                                          interpolation=codes.interpolation.RAW)
-        self.assertEqual(channel_data.values, [ 199.9, 198.7 ])
+        self.assertEqual(channel_data.values, [199.9, 198.7])
         self.assertEqual(channel_data.times, [
-            datetime.datetime(2012, 7, 13, 2, 5, 1, 443589, utc),
-            datetime.datetime(2012, 7, 13, 7, 19, 31, 806097, utc)
+            datetime(2012, 7, 13, 2, 5, 1, 443589, utc),
+            datetime(2012, 7, 13, 7, 19, 31, 806097, utc)
         ])
         self.assertEqual(repr(channel_data.times[0].tzinfo), 'UTC(+10)')
 
@@ -149,10 +149,10 @@ class TestArchiver(unittest.TestCase):
         end = '2012-07-13 10:00:00Z'
         channel_data = self.archiver.get('EXAMPLE:DOUBLE_SCALAR', start, end,
                                          interpolation=codes.interpolation.RAW)
-        self.assertEqual(channel_data.values, [ 199.9, 198.7 ])
+        self.assertEqual(channel_data.values, [199.9, 198.7])
         self.assertEqual(channel_data.times, [
-            datetime.datetime(2012, 7, 13, 2, 5, 1, 443589, utc),
-            datetime.datetime(2012, 7, 13, 7, 19, 31, 806097, utc)
+            datetime(2012, 7, 13, 2, 5, 1, 443589, utc),
+            datetime(2012, 7, 13, 7, 19, 31, 806097, utc)
         ])
 
     def test_get_with_str_times_incl_tz(self):
@@ -160,16 +160,16 @@ class TestArchiver(unittest.TestCase):
         end = '2012-07-13 20:00:00+10:00'
         channel_data = self.archiver.get('EXAMPLE:DOUBLE_SCALAR', start, end,
                                          interpolation=codes.interpolation.RAW)
-        self.assertEqual(channel_data.values, [ 199.9, 198.7 ])
+        self.assertEqual(channel_data.values, [199.9, 198.7])
         self.assertEqual(channel_data.times, [
-            datetime.datetime(2012, 7, 13, 2, 5, 1, 443589, utc),
-            datetime.datetime(2012, 7, 13, 7, 19, 31, 806097, utc)
+            datetime(2012, 7, 13, 2, 5, 1, 443589, utc),
+            datetime(2012, 7, 13, 7, 19, 31, 806097, utc)
         ])
         self.assertEqual(repr(channel_data.times[0].tzinfo), 'UTC(+10)')
 
     def test_get_waveform(self):
-        start = datetime.datetime(2012, 1, 1)
-        end = datetime.datetime(2013, 1, 1)
+        start = datetime(2012, 1, 1)
+        end = datetime(2013, 1, 1)
         channel_data = self.archiver.get(
                             'EXAMPLE:INT_WAVEFORM', start, end,
                             interpolation=codes.interpolation.RAW)
@@ -183,8 +183,8 @@ class TestArchiver(unittest.TestCase):
         ])
 
     def test_get_enum(self):
-        start = datetime.datetime(2012, 1, 1)
-        end = datetime.datetime(2013, 1, 1)
+        start = datetime(2012, 1, 1)
+        end = datetime(2013, 1, 1)
         channel_data = self.archiver.get(
                             'EXAMPLE:ENUM_SCALAR', start, end,
                             interpolation=codes.interpolation.RAW)
@@ -193,8 +193,8 @@ class TestArchiver(unittest.TestCase):
         self.assertEqual(channel_data.values, [7, 1, 8])
 
     def test_get_multiple(self):
-        start = datetime.datetime(2012, 1, 1)
-        end = datetime.datetime(2013, 1, 1)
+        start = datetime(2012, 1, 1)
+        end = datetime(2013, 1, 1)
         data = self.archiver.get(
                 ['EXAMPLE:DOUBLE_SCALAR',
                  'EXAMPLE:INT_WAVEFORM',
@@ -205,18 +205,18 @@ class TestArchiver(unittest.TestCase):
         self.assertEqual(data[0].channel, 'EXAMPLE:DOUBLE_SCALAR')
         self.assertEqual(data[1].channel, 'EXAMPLE:INT_WAVEFORM')
         self.assertEqual(data[2].channel, 'EXAMPLE:ENUM_SCALAR')
-        self.assertEqual(data[0].values, [ 200.5, 199.9, 198.7, 196.1 ])
+        self.assertEqual(data[0].values, [200.5, 199.9, 198.7, 196.1])
         self.assertEqual(data[1].values, [[3, 5, 13],
                                           [2, 4, 11],
                                           [0, 7, 1]])
         self.assertEqual(data[2].values, [7, 1, 8])
 
     def test_get_with_wrong_number_of_keys(self):
-        start = datetime.datetime(2012, 1, 1)
-        end = datetime.datetime(2013, 1, 1)
+        start = datetime(2012, 1, 1)
+        end = datetime(2013, 1, 1)
         self.assertRaises(exceptions.ChannelKeyMismatch,
                           self.archiver.get,
-                          [ 'EXAMPLE:DOUBLE_SCALAR' ],
+                          ['EXAMPLE:DOUBLE_SCALAR'],
                           start, end,
                           archive_keys=[1001, 1008],
                           interpolation=codes.interpolation.RAW)

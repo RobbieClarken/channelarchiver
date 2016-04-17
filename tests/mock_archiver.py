@@ -5,13 +5,14 @@ import json
 import re
 try:
     from xmlrpclib import Fault, ProtocolError
-except ImportError: # Python 3
+except ImportError:  # Python 3
     from xmlrpc.client import Fault, ProtocolError
 from channelarchiver import codes, utils
 
 
-tests_dir =  os.path.dirname(os.path.realpath(__file__))
+tests_dir = os.path.dirname(os.path.realpath(__file__))
 data_dir = os.path.join(tests_dir, 'data')
+
 
 def read_data(filename):
     path = os.path.join(data_dir, filename + '.json')
@@ -19,12 +20,14 @@ def read_data(filename):
         data = json.load(f)
     return data
 
+
 def check_type(value, check_type, expected_name):
     if not isinstance(value, check_type):
         supplied_name = type(value).__name__.upper()
         raise Fault(codes.xmlrpc.TYPE,
-            ('Value of type {0} supplied where type {1} was '
-             'expected.').format(supplied_name, expected_name))
+                    ('Value of type {0} supplied where type {1} was '
+                     'expected.').format(supplied_name, expected_name))
+
 
 class MockArchiver(object):
     '''
@@ -125,9 +128,9 @@ class MockArchiver(object):
                 channel_data = archive_data[channel].copy()
                 channel_values = channel_data['values']
                 for index, value in enumerate(channel_values):
-                   time = value['secs'] + 1e-9 * value['nano']
-                   if not start <= time <= end:
-                       channel_values.pop(index)
+                    time = value['secs'] + 1e-9 * value['nano']
+                    if not start <= time <= end:
+                        channel_values.pop(index)
                 del channel_values[count:]
             except KeyError:
                 channel_data = {
@@ -152,9 +155,8 @@ class MockArchiver(object):
 
     def _check_key(self, key):
         if key not in self._archives:
-            raise Fault(codes.archiver.NO_INDEX,
-                "Invalid key {0}". format(key))
+            raise Fault(codes.archiver.NO_INDEX, "Invalid key {0}". format(key))
 
     def __getattr__(self, name):
         raise Fault(codes.xmlrpc.NO_SUCH_METHOD,
-            "Method 'archiver.{0}' not defined". format(name))
+                    "Method 'archiver.{0}' not defined". format(name))
