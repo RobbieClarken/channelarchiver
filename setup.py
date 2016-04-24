@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 
 from setuptools import setup
+import re
+
+with open('channelarchiver/__init__.py') as file:
+    version = re.search(r"__version__ = '(.*)'", file.read()).group(1)
 
 setup(
     name='channelarchiver',
-    version='0.0.5',
+    version=version,
     description='Python client for the EPICS Channel Archiver.',
     long_description=open('README.rst').read(),
     license=open('LICENSE.rst').read(),

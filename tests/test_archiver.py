@@ -178,9 +178,8 @@ def test_get_with_str_times_incl_tz(archiver):
 def test_get_waveform(archiver):
     start = datetime(2012, 1, 1)
     end = datetime(2013, 1, 1)
-    channel_data = archiver.get(
-                        'EXAMPLE:INT_WAVEFORM', start, end,
-                        interpolation=codes.interpolation.RAW)
+    channel_data = archiver.get('EXAMPLE:INT_WAVEFORM', start, end,
+                                interpolation=codes.interpolation.RAW)
     assert channel_data.channel == 'EXAMPLE:INT_WAVEFORM'
     assert channel_data.data_type == codes.data_type.INT
     assert channel_data.elements == 3
@@ -194,9 +193,8 @@ def test_get_waveform(archiver):
 def test_get_enum(archiver):
     start = datetime(2012, 1, 1)
     end = datetime(2013, 1, 1)
-    channel_data = archiver.get(
-                        'EXAMPLE:ENUM_SCALAR', start, end,
-                        interpolation=codes.interpolation.RAW)
+    channel_data = archiver.get('EXAMPLE:ENUM_SCALAR', start, end,
+                                interpolation=codes.interpolation.RAW)
     assert channel_data.channel == 'EXAMPLE:ENUM_SCALAR'
     assert channel_data.data_type == codes.data_type.ENUM
     assert channel_data.values == [7, 1, 8]
@@ -205,12 +203,12 @@ def test_get_enum(archiver):
 def test_get_multiple(archiver):
     start = datetime(2012, 1, 1)
     end = datetime(2013, 1, 1)
-    data = archiver.get(
-            ['EXAMPLE:DOUBLE_SCALAR',
-             'EXAMPLE:INT_WAVEFORM',
-             'EXAMPLE:ENUM_SCALAR'],
-            start, end,
-            interpolation=codes.interpolation.RAW)
+    channels = [
+        'EXAMPLE:DOUBLE_SCALAR',
+        'EXAMPLE:INT_WAVEFORM',
+        'EXAMPLE:ENUM_SCALAR'
+    ]
+    data = archiver.get(channels, start, end, interpolation=codes.interpolation.RAW)
     assert isinstance(data, list)
     assert data[0].channel == 'EXAMPLE:DOUBLE_SCALAR'
     assert data[1].channel == 'EXAMPLE:INT_WAVEFORM'

@@ -164,9 +164,9 @@ def pretty_list_repr(lst, value_format='{0!r}', max_line_len=79, prefix='',
                      min_value_len=0):
     if not lst:
         return repr(lst)
-    lst = list(map(value_format.format, lst))
+    lst = [value_format.format(v) for v in lst]
     values = len(lst)
-    max_value_len = max(len(max(lst, key=len)), min_value_len)
+    max_value_len = max(min_value_len, *(len(v) for v in lst))
     prefix_len = len(prefix)
     delim = ', '
     delim_len = len(delim)
@@ -184,7 +184,7 @@ def pretty_list_repr(lst, value_format='{0!r}', max_line_len=79, prefix='',
         offset = line * values_per_line
         line_lst = lst[offset:(offset+values_per_line)]
         s += '[' if line == 0 else start_space
-        s += delim.join(map(space_spec.format, line_lst))
+        s += delim.join(space_spec.format(s) for s in line_lst)
         s += ']' if line == lines - 1 else ',\n'
     return s
 
@@ -192,8 +192,7 @@ def pretty_list_repr(lst, value_format='{0!r}', max_line_len=79, prefix='',
 def max_value_len_in_waveform(lst, value_format='{0!r}'):
     max_value_len = 0
     for sub_lst in lst:
-        sub_lst = map(value_format.format, sub_lst)
-        sub_max_val_len = len(max(sub_lst, key=len))
+        sub_max_val_len = max(len(value_format.format(v)) for v in sub_lst)
         max_value_len = max(max_value_len, sub_max_val_len)
     return max_value_len
 

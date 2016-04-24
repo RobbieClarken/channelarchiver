@@ -22,7 +22,6 @@ Example usage:
 
 
 __title__ = 'channelarchiver'
-__version_info__ = (0, 0, 5)
-__version__ = '.'.join(map(str, __version_info__))
+__version__ = '0.0.5'
 __license__ = 'MIT'
 __all__ = [Archiver, codes]

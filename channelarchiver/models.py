@@ -7,18 +7,15 @@ from . import utils
 from . import exceptions
 
 
-HAS_NUMPY = False
 try:
     import numpy as np
-    HAS_NUMPY = True
 except ImportError:
-    pass
+    HAS_NUMPY = False
+else:
+    HAS_NUMPY = True
 
 
-ArchiveProperties = namedtuple('ArchiveProperties',
-                               'key start_time end_time')
-
-
+ArchiveProperties = namedtuple('ArchiveProperties', 'key start_time end_time')
 Limits = namedtuple('Limits', 'low high')
 
 
@@ -140,17 +137,17 @@ class ChannelData(object):
         return s
 
     def __str__(self):
-        times = ['time'] + [dt.strftime('%Y-%m-%d %H:%M:%S')
-                            for dt in self.times]
-        statuses = ['status'] + list(map(codes.status.str_value, self.statuses))
-        severities = ['severity'] + list(map(codes.severity.str_value, self.severities))
-        times_len = len(max(times, key=len))
-        statuses_len = len(max(statuses, key=len))
-        severities_len = len(max(severities, key=len))
-        s = ''
+        times = ['time'] + [dt.strftime('%Y-%m-%d %H:%M:%S') for dt in self.times]
+        statuses = ['status'] + [codes.status.str_value(s) for s in self.statuses]
+        severities = ['severity'] + [codes.severity.str_value(s)
+                                     for s in self.severities]
+        times_len = max(len(s) for s in times)
+        statuses_len = max(len(s) for s in statuses)
+        severities_len = max(len(s) for s in severities)
+        out = ''
         value_format = '{0:.9g}'
         if self.elements == 1:
-            values = ['value'] + list(map(value_format.format, self.values))
+            values = ['value'] + [value_format.format(v) for v in self.values]
         else:
             len_for_values = 79 - times_len - statuses_len - severities_len - 6
             values = ['value']
@@ -158,12 +155,13 @@ class ChannelData(object):
                                                             value_format)
             for value in self.values:
                 formatted_value = utils.pretty_list_repr(
-                                    value, value_format,
-                                    max_line_len=len_for_values,
-                                    min_value_len=max_value_len)
+                    value, value_format,
+                    max_line_len=len_for_values,
+                    min_value_len=max_value_len
+                )
                 values += formatted_value.split('\n')
 
-        values_len = len(max(values, key=len))
+        values_len = max(len(s) for s in values)
         spec = ('{0:>' + str(times_len) + '}  '
                 '{1:>' + str(values_len) + '}  '
                 '{2:>' + str(statuses_len) + '}  '
@@ -171,13 +169,13 @@ class ChannelData(object):
 
         if self.elements == 1:
             for fields in zip(times, values, statuses, severities):
-                s += spec.format(*fields)
+                out += spec.format(*fields)
         else:
             i = 0
             for line in values:
                 if i == 0 or '[' in line:
-                    s += spec.format(times[i], line, statuses[i], severities[i])
+                    out += spec.format(times[i], line, statuses[i], severities[i])
                     i += 1
                 else:
-                    s += spec.format('', line.ljust(values_len), '', '')
-        return s.rstrip()
+                    out += spec.format('', line.ljust(values_len), '', '')
+        return out.rstrip()
