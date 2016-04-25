@@ -114,7 +114,7 @@ class Archiver(object):
             interpolation='linear',
             scan_archives=True, archive_keys=None, tz=None):
         '''
-        Retrieves archived.
+        Retrieves archived data.
 
         channels: The channels to get data for. Can be a string or
             list of strings.
@@ -167,10 +167,9 @@ class Archiver(object):
         start_sec, start_nano = utils.sec_and_nano_from_datetime(start)
         end_sec, end_nano = utils.sec_and_nano_from_datetime(end)
 
-        if scan_archives:
-            self.scan_archives(channels)
-
         if archive_keys is None:
+            if scan_archives:
+                self.scan_archives(channels)
             channels_for_key = defaultdict(list)
             for channel in channels:
                 greatest_overlap = None
@@ -195,19 +194,15 @@ class Archiver(object):
                 raise ChannelKeyMismatch('Number of archive keys must '
                                          'equal number of channels.')
             key_for_channel = dict(zip(channels, archive_keys))
-            group_func = key_for_channel.__getitem__
-            sorted_channels = sorted(channels, key=group_func)
-            group_by_iter = groupby(sorted_channels, key=group_func)
-            channels_for_key = dict(
-                    (key, list(value)) for key, value in group_by_iter
-            )
+            grouping_func = key_for_channel.get
+            groups = groupby(sorted(channels, key=grouping_func), key=grouping_func)
+            channels_for_key = {key: list(channels) for key, channels in groups}
 
         return_data = [None] * len(channels)
 
         for archive_key, channels_on_archive in channels_for_key.items():
             data = self.archiver.values(archive_key, channels_on_archive,
-                                        start_sec, start_nano,
-                                        end_sec, end_nano,
+                                        start_sec, start_nano, end_sec, end_nano,
                                         limit, interpolation)
             for archive_data in data:
                 channel_data = self._parse_values(archive_data, tz)

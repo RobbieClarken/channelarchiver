@@ -158,5 +158,15 @@
         ]
       }
     }
+  },
+  "1010": {
+    "name": "Empty archiver 1",
+    "path": "/asp/arc/ring/empty/short_term_dir/index",
+    "data": {}
+  },
+  "1011": {
+    "name": "Empty archiver 2",
+    "path": "/asp/arc/ring/empty/long_term_dir/index",
+    "data": {}
   }
 }

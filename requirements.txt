@@ -1,8 +1,12 @@
 flake8==2.5.4
+funcsigs==1.0.1
 mccabe==0.4.0
+mock==2.0.0
+pbr==1.9.1
 pep8==1.7.0
 py==1.4.31
 pyflakes==1.0.0
 pytest==2.9.1
 pytz==2016.3
+six==1.10.0
 tzlocal==1.2.2

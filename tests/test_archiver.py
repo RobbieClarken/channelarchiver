@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import pytest
+from mock import Mock, call
 
 from channelarchiver import Archiver,  codes, utils, exceptions
 from channelarchiver.models import ChannelData, ArchiveProperties
@@ -216,6 +217,25 @@ def test_get_multiple(archiver):
     assert data[0].values == [200.5, 199.9, 198.7, 196.1]
     assert data[1].values == [[3, 5, 13], [2, 4, 11], [0, 7, 1]]
     assert data[2].values == [7, 1, 8]
+
+
+def test_get_with_archive_keys(archiver):
+    values_mock = Mock(wraps=archiver.archiver.values)
+    archiver.archiver.values = values_mock
+    channels = [
+        'EXAMPLE:GROUP1_A',
+        'EXAMPLE:GROUP2_A',
+        'EXAMPLE:GROUP1_B'
+    ]
+    keys = [1010, 1011, 1010]
+    archiver.get(channels, '2000-01-01',  '2000-01-02',
+                 archive_keys=keys, interpolation=codes.interpolation.RAW)
+    expected_call_1 = call(1010, ['EXAMPLE:GROUP1_A', 'EXAMPLE:GROUP1_B'],
+                           946645200, 0, 946731600, 0, 1000, 0)
+    expected_call_2 = call(1011, ['EXAMPLE:GROUP2_A'],
+                           946645200, 0, 946731600, 0, 1000, 0)
+    assert values_mock.mock_calls[0] == expected_call_1
+    assert values_mock.mock_calls[1] == expected_call_2
 
 
 def test_get_with_wrong_number_of_keys(archiver):
