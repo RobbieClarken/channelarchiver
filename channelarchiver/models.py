@@ -20,32 +20,31 @@ Limits = namedtuple('Limits', 'low high')
 
 
 class ChannelData(object):
-    '''
+    """
     Container for archive data for a single channel.
 
-    Fields:
-    channel: The channel name.
-    values: A list of channel values.
-    times: A list of datetimes corresponding with the retrieved times.
-    statuses: A list of status values corresponding with the retrieved
-        times.
-    severities: A list of severity values corresponding with the
-        retrieved times.
-    units: The units of the values.
-    states: A list of strings describing the states a STRING or ENUM
-        can have.
-    data_type: The data type of the channel.
-    elements: The number of elements per sample for waveform channels.
-    display_limits: Values advising how to display the values in a user
-        interface.
-    warn_limits: Low and high values for which the channel will
-        generate a warning.
-    alarm_limits: Low and high values for which the channel will
-        generate an alarm.
-    display_precision: The number of decimal places to show in user
-        interfaces.
-    archive_key: The archive the data was pulled from.
-    '''
+    Attributes:
+        channel (str): The channel name.
+        values (List): A list of channel values.
+        times (List[datetime]): Timestamps corresponding to the retrieved values.
+        statuses (List[int]): Status values corresponding with the retrieved values.
+        severities (List[int]): Severity values corresponding with the retrieved
+            values.
+        units (str): The units of the values.
+        states (List[str]): The states a STRING or ENUM can have.
+        data_type (int): The data type of the channel.
+        elements (int): The number of elements per sample for waveform channels.
+        display_limits (Limits): Values advising how to display the values in a user
+            interface.
+        warn_limits (Limits): Low and high values for which the channel will
+            generate a warning.
+        alarm_limits (Limits): Low and high values for which the channel will
+            generate an alarm.
+        display_precision (int): The number of decimal places to show in user
+            interfaces.
+        archive_key (int): The archive the data was pulled from.
+
+    """
 
     def __init__(self, channel=None, values=None, times=None, statuses=None,
                  severities=None, units=None, states=None, data_type=None,
@@ -74,7 +73,7 @@ class ChannelData(object):
 
     @property
     def array(self):
-        '''Return the data in a numpy array structure.'''
+        """Return the data in a numpy array structure."""
 
         if not HAS_NUMPY:
             raise exceptions.NumpyNotInstalled('Numpy not found.')

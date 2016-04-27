@@ -18,17 +18,17 @@ SECONDS_PER_DAY = HOURS_PER_DAY * SECONDS_PER_HOUR
 
 
 class UTC(datetime.tzinfo):
-    '''UTC timezone with optional offset.'''
+    """UTC timezone with optional offset."""
 
     def __init__(self, offset=0):
-        '''
-        offset: Timezone offset in hours relative to UTC.
-        '''
+        """
+        Args:
+            offset (float): Timezone offset in hours relative to UTC.
 
+        """
         if not -24 < offset < 24:
             raise ValueError('offset must be greater than -24 '
                              'and less than 24')
-
         self.offset = datetime.timedelta(hours=offset)
 
     def utcoffset(self, dt):
@@ -69,10 +69,10 @@ class UTC(datetime.tzinfo):
 
 
 def localize_datetime(dt, tz):
-    '''
+    """
     Localize a timezone naive datetime. Handles pytz timezones correctly.
-    '''
 
+    """
     try:
         return tz.localize(dt)
     except AttributeError:
@@ -80,12 +80,14 @@ def localize_datetime(dt, tz):
 
 
 def datetime_from_isoformat(iso_str):
-    '''
+    """
     Convert a string in ISO 8601 format into a datetime.
-    iso_str: String in ISO 8601 format. Examples:
-        '2013-08-19T14:29Z', '2013-08-19 14:29+10:00'
-    '''
 
+    Args:
+        iso_str (str): String in ISO 8601 format. Examples:
+            '2013-08-19T14:29Z', '2013-08-19 14:29+10:00'
+
+    """
     match = re.match('^(.*:.*)([\+\-])(\d\d)(?::(\d\d))?$', iso_str)
     if match is not None:
         dt_str, tz_sign, tz_hr, tz_min = match.groups(0)
@@ -125,11 +127,12 @@ def datetime_from_isoformat(iso_str):
 
 
 def datetime_from_sec_and_nano(seconds, nanoseconds=0, tz=None):
-    '''
+    """
     Convert seconds and nanoseconds since the Epoch into a datetime with given timezone.
     If tz is not specified, the local timezone will be used.
     Note: Some precision will be lost as datetimes only store microseconds.
-    '''
+
+    """
     if tz is None:
         tz = local_tz
     # We create the datetime in two steps to avoid the weird
@@ -143,9 +146,10 @@ def datetime_from_sec_and_nano(seconds, nanoseconds=0, tz=None):
 
 
 def sec_and_nano_from_datetime(dt):
-    '''
+    """
     Convert a datetime to seconds and nanoseconds since the Epoch.
-    '''
+
+    """
     seconds = int(calendar.timegm(dt.utctimetuple()))
     nanoseconds = int(dt.microsecond * 1e3)
     return seconds, nanoseconds

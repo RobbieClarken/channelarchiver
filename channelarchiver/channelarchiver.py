@@ -15,32 +15,31 @@ from .exceptions import ChannelNotFound, ChannelKeyMismatch
 
 
 class Archiver(object):
-    '''
-    Class for interacting with an EPICS Channel Access Archiver.
-    '''
+    """Class for interacting with an EPICS Channel Access Archiver."""
 
     def __init__(self, host):
-        '''
-        host: The URL of your archiver's ArchiveDataServer.cgi. Will
-            look something like:
-            http://cr01arc01/cgi-bin/ArchiveDataServer.cgi
-        '''
+        """
+        Args:
+            host (str): URL to your archiver's ArchiveDataServer.cgi. Will
+                look something like: http://cr01arc01/cgi-bin/ArchiveDataServer.cgi
 
+        """
         super(Archiver, self).__init__()
         self.server = Server(host)
         self.archiver = self.server.archiver
         self.archives_for_channel = defaultdict(list)
 
     def scan_archives(self, channels=None):
-        '''
+        """
         Determine which archives contain the specified channels. This
         can be called prior to calling .get() with scan_archives=False
         to speed up data retrieval.
 
-        channels: (optional) The channel names to scan for. Can be a
-            string or list of strings.
-            If omitted, all channels will be scanned for.
-        '''
+        Args:
+            channels (Optional[List[str]]): The channel names to scan for.
+                If omitted, all channels will be scanned for.
+
+        """
 
         if channels is None:
             channels = []
@@ -113,33 +112,40 @@ class Archiver(object):
     def get(self, channels, start, end, limit=1000,
             interpolation='linear',
             scan_archives=True, archive_keys=None, tz=None):
-        '''
+        """
         Retrieves archived data.
 
-        channels: The channels to get data for. Can be a string or
-            list of strings.
-        start: Start time as a datetime or ISO 8601 formatted string.
-            If no timezone is specified, assumes local timezone.
-        end: End time as a datetime or ISO 8601 formatted string.
-        limit: (optional) Number of data points to aim to retrieve.
-            The actual number returned may differ depending on the
-            number of points in the archive, the interpolation method
-            and the maximum allowed points set by the archiver.
-        interpolation: (optional) Method of interpolating the data.
-            Should be one of 'raw', 'spreadsheet', 'averaged',
-            'plot-binning' or 'linear'.
-        scan_archives: (optional) Whether or not to perform a scan to
-            determine which archives the channels are on. If this is to
-            be False .scan_archives() should have been called prior to
-            calling .get().
-            Default: True
-        archive_keys: (optional) The keys of the archives to get data
-            from. Should be the same length as channels. If this
-            is omitted the archives with the greatest coverage of the
-            requested time interval will be used.
-        tz: (optional) The timezone that datetimes should be returned
-            in. If omitted, the timezone of start will be used.
-        '''
+        Args:
+            channels (str or List[str]): The channels to get data for.
+            start (str or datetime): Start time as a datetime or ISO 8601
+                formatted string.  If no timezone is specified, assumes
+                local timezone.
+            end (str or datetime): End time.
+            limit (Optional[int]): Number of data points to aim to retrieve.
+                The actual number returned may differ depending on the
+                number of points in the archive, the interpolation method
+                and the maximum allowed points set by the archiver.
+            interpolation (Optional[str]): Method of interpolating the data.
+                Should be one of 'raw', 'spreadsheet', 'averaged',
+                'plot-binning' or 'linear'.
+            scan_archives (Optional[bool]): Whether or not to perform a scan to
+                determine which archives the channels are on. If this is to
+                be False .scan_archives() should have been called prior to
+                calling .get().
+                Default: True
+            archive_keys (Optional[List[int]]): The keys of the archives to get
+                data from. Should be the same length as channels. If this
+                is omitted the archives with the greatest coverage of the
+                requested time interval will be used.
+            tz (Optional[tzinfo]): The timezone that datetimes should be returned
+                in. If omitted, the timezone of start will be used.
+
+        Returns:
+            ChannelData objects. If the channels parameters was a string the
+            returned value will be a single ChannelData object. If channels was a
+            list of strings a list of ChannelData objects will be returned.
+
+        """
 
         received_str = isinstance(channels, utils.StrType)
         if received_str:

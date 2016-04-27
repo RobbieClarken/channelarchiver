@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .channelarchiver import Archiver
-from . import codes
-
-'''
+"""
 channelarchiver is a library for retrieving data from an EPICS Channel
 Archiver. It does the hard work of figuring out which archives contain
 the appropriate data for times and channels you specify.
@@ -18,7 +15,11 @@ Example usage:
     >>> lifetime, current = archiver.get(channels, start, end)
     >>> lifetime.values
     [25.8, 25.7, ..., 26.1]
-'''
+
+"""
+
+from .channelarchiver import Archiver
+from . import codes
 
 
 __title__ = 'channelarchiver'
