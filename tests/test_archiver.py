@@ -5,7 +5,7 @@ from mock import Mock, call
 
 from channelarchiver import Archiver,  codes, utils, exceptions
 from channelarchiver.models import ChannelData, ArchiveProperties
-from .mock_archiver import MockArchiver
+from mock_archiver import MockArchiver
 
 utc = utils.UTC()
 local_tz = utils.local_tz
@@ -222,20 +222,13 @@ def test_get_multiple(archiver):
 def test_get_with_archive_keys(archiver):
     values_mock = Mock(wraps=archiver.archiver.values)
     archiver.archiver.values = values_mock
-    channels = [
-        'EXAMPLE:GROUP1_A',
-        'EXAMPLE:GROUP2_A',
-        'EXAMPLE:GROUP1_B'
-    ]
+    channels = ['EXAMPLE:GROUP1_A', 'EXAMPLE:GROUP2_A', 'EXAMPLE:GROUP1_B']
     keys = [1010, 1011, 1010]
     archiver.get(channels, '2000-01-01',  '2000-01-02',
                  archive_keys=keys, interpolation=codes.interpolation.RAW)
-    expected_call_1 = call(1010, ['EXAMPLE:GROUP1_A', 'EXAMPLE:GROUP1_B'],
-                           946645200, 0, 946731600, 0, 1000, 0)
-    expected_call_2 = call(1011, ['EXAMPLE:GROUP2_A'],
-                           946645200, 0, 946731600, 0, 1000, 0)
-    assert values_mock.mock_calls[0] == expected_call_1
-    assert values_mock.mock_calls[1] == expected_call_2
+    first_call, second_call = values_mock.call_args_list
+    assert first_call[0][:2]  == (1010, ['EXAMPLE:GROUP1_A', 'EXAMPLE:GROUP1_B'])
+    assert second_call[0][:2]  == (1011, ['EXAMPLE:GROUP2_A'])
 
 
 def test_get_with_wrong_number_of_keys(archiver):
