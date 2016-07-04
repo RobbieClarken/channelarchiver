@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 try:
-    from xmlrpclib import Server
-except ImportError:  # Python 3
     from xmlrpc.client import Server
+except ImportError:  # Python 2
+    from xmlrpclib import Server
 
 from collections import defaultdict
 from itertools import groupby
