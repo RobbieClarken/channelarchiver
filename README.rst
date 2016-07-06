@@ -1,7 +1,8 @@
 .. image:: https://travis-ci.org/RobbieClarken/channelarchiver.svg
     :target: https://travis-ci.org/RobbieClarken/channelarchiver
 
-A python client for retrieving data from an EPICS Channel Archiver (http://www.aps.anl.gov/epics/).
+A python client for retrieving data from an `EPICS Channel Archiver
+<https://ics-web.sns.ornl.gov/kasemir/archiver/>`_.
 
 To get started just import the ``Archiver`` class and specify the
 address of your Channel Archiver server:
