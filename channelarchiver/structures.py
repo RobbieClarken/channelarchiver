@@ -12,13 +12,14 @@ class Codes(object):
 
     def __setattr__(self, name, value):
         super(Codes, self).__setattr__(name, value)
-        if not name.startswith('_'):
+        if not name.startswith("_"):
             self._reverse_dict[value] = name
 
     def __repr__(self):
-        constants_str = ', '.join('{0}={1!r}'.format(v, k) for k, v
-                                  in sorted(self._reverse_dict.items()))
-        return 'Codes({0})'.format(constants_str)
+        constants_str = ", ".join(
+            "{0}={1!r}".format(v, k) for k, v in sorted(self._reverse_dict.items())
+        )
+        return "Codes({0})".format(constants_str)
 
     def __getitem__(self, key):
-        return self.__dict__[key.replace('-', '_').upper()]
+        return self.__dict__[key.replace("-", "_").upper()]

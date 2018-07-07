@@ -15,8 +15,8 @@ else:
     HAS_NUMPY = True
 
 
-ArchiveProperties = namedtuple('ArchiveProperties', 'key start_time end_time')
-Limits = namedtuple('Limits', 'low high')
+ArchiveProperties = namedtuple("ArchiveProperties", "key start_time end_time")
+Limits = namedtuple("Limits", "low high")
 
 
 class ChannelData(object):
@@ -46,11 +46,24 @@ class ChannelData(object):
 
     """
 
-    def __init__(self, channel=None, values=None, times=None, statuses=None,
-                 severities=None, units=None, states=None, data_type=None,
-                 elements=None, display_limits=None, warn_limits=None,
-                 alarm_limits=None, display_precision=None, archive_key=None,
-                 interpolation=None):
+    def __init__(
+        self,
+        channel=None,
+        values=None,
+        times=None,
+        statuses=None,
+        severities=None,
+        units=None,
+        states=None,
+        data_type=None,
+        elements=None,
+        display_limits=None,
+        warn_limits=None,
+        alarm_limits=None,
+        display_precision=None,
+        archive_key=None,
+        interpolation=None,
+    ):
 
         super(ChannelData, self).__init__()
 
@@ -76,7 +89,7 @@ class ChannelData(object):
         """Return the data in a numpy array structure."""
 
         if not HAS_NUMPY:
-            raise exceptions.NumpyNotInstalled('Numpy not found.')
+            raise exceptions.NumpyNotInstalled("Numpy not found.")
 
         # Only compute the array once
         if self._array is None:
@@ -90,13 +103,14 @@ class ChannelData(object):
             else:
                 value_dtype = np.dtype(float)
 
-            dtypes = [('time', np.dtype('datetime64[us]')),
-                      ('value', value_dtype, self.elements),
-                      ('status', np.uint8),
-                      ('severity', np.uint16)]
+            dtypes = [
+                ("time", np.dtype("datetime64[us]")),
+                ("value", value_dtype, self.elements),
+                ("status", np.uint8),
+                ("severity", np.uint16),
+            ]
 
-            data = zip(self.times, self.values,
-                       self.statuses, self.severities)
+            data = zip(self.times, self.values, self.statuses, self.severities)
 
             self._array = np.array(data, dtype=dtypes)
 
@@ -105,66 +119,75 @@ class ChannelData(object):
     def __repr__(self):
 
         if self.data_type == codes.data_type.DOUBLE:
-            fmt = '{0:.6g}'
+            fmt = "{0:.6g}"
         else:
-            fmt = '{0!r}'
+            fmt = "{0!r}"
 
-        s = 'ChannelData(\n'
+        s = "ChannelData(\n"
         if self.elements == 1:
-            s += utils.pretty_list_repr(self.values, fmt,
-                                        prefix='    values=')
+            s += utils.pretty_list_repr(self.values, fmt, prefix="    values=")
         else:
-            s += utils.pretty_waveform_repr(self.values, fmt,
-                                            prefix='    values=')
-        s += ',\n'
-        for attr in ['times', 'statuses', 'severities', 'states']:
+            s += utils.pretty_waveform_repr(self.values, fmt, prefix="    values=")
+        s += ",\n"
+        for attr in ["times", "statuses", "severities", "states"]:
             value = self.__getattribute__(attr)
             if value is None:
                 continue
-            prefix = '    {0}='.format(attr)
+            prefix = "    {0}=".format(attr)
             s += utils.pretty_list_repr(value, prefix=prefix)
-            s += ',\n'
-        for attr in ['units', 'data_type', 'elements', 'display_limits',
-                     'warn_limits', 'alarm_limits', 'display_precision',
-                     'archive_key', 'interpolation']:
+            s += ",\n"
+        for attr in [
+            "units",
+            "data_type",
+            "elements",
+            "display_limits",
+            "warn_limits",
+            "alarm_limits",
+            "display_precision",
+            "archive_key",
+            "interpolation",
+        ]:
             value = self.__getattribute__(attr)
             if value is None:
                 continue
-            s += '    {0}={1!r},\n'.format(attr, value)
+            s += "    {0}={1!r},\n".format(attr, value)
         s = s[:-2]
-        s += '\n)'
+        s += "\n)"
         return s
 
     def __str__(self):
-        times = ['time'] + [dt.strftime('%Y-%m-%d %H:%M:%S') for dt in self.times]
-        statuses = ['status'] + [codes.status.str_value(s) for s in self.statuses]
-        severities = ['severity'] + [codes.severity.str_value(s)
-                                     for s in self.severities]
+        times = ["time"] + [dt.strftime("%Y-%m-%d %H:%M:%S") for dt in self.times]
+        statuses = ["status"] + [codes.status.str_value(s) for s in self.statuses]
+        severities = ["severity"] + [
+            codes.severity.str_value(s) for s in self.severities
+        ]
         times_len = max(len(s) for s in times)
         statuses_len = max(len(s) for s in statuses)
         severities_len = max(len(s) for s in severities)
-        out = ''
-        value_format = '{0:.9g}'
+        out = ""
+        value_format = "{0:.9g}"
         if self.elements == 1:
-            values = ['value'] + [value_format.format(v) for v in self.values]
+            values = ["value"] + [value_format.format(v) for v in self.values]
         else:
             len_for_values = 79 - times_len - statuses_len - severities_len - 6
-            values = ['value']
-            max_value_len = utils.max_value_len_in_waveform(self.values,
-                                                            value_format)
+            values = ["value"]
+            max_value_len = utils.max_value_len_in_waveform(self.values, value_format)
             for value in self.values:
                 formatted_value = utils.pretty_list_repr(
-                    value, value_format,
+                    value,
+                    value_format,
                     max_line_len=len_for_values,
-                    min_value_len=max_value_len
+                    min_value_len=max_value_len,
                 )
-                values += formatted_value.split('\n')
+                values += formatted_value.split("\n")
 
         values_len = max(len(s) for s in values)
-        spec = ('{0:>' + str(times_len) + '}  '
-                '{1:>' + str(values_len) + '}  '
-                '{2:>' + str(statuses_len) + '}  '
-                '{3:>' + str(severities_len) + '}\n')
+        spec = (
+            "{0:>" + str(times_len) + "}  "
+            "{1:>" + str(values_len) + "}  "
+            "{2:>" + str(statuses_len) + "}  "
+            "{3:>" + str(severities_len) + "}\n"
+        )
 
         if self.elements == 1:
             for fields in zip(times, values, statuses, severities):
@@ -172,9 +195,9 @@ class ChannelData(object):
         else:
             i = 0
             for line in values:
-                if i == 0 or '[' in line:
+                if i == 0 or "[" in line:
                     out += spec.format(times[i], line, statuses[i], severities[i])
                     i += 1
                 else:
-                    out += spec.format('', line.ljust(values_len), '', '')
+                    out += spec.format("", line.ljust(values_len), "", "")
         return out.rstrip()

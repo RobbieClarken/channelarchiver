@@ -27,8 +27,7 @@ class UTC(datetime.tzinfo):
 
         """
         if not -24 < offset < 24:
-            raise ValueError('offset must be greater than -24 '
-                             'and less than 24')
+            raise ValueError("offset must be greater than -24 " "and less than 24")
         self.offset = datetime.timedelta(hours=offset)
 
     def utcoffset(self, dt):
@@ -40,20 +39,20 @@ class UTC(datetime.tzinfo):
     def tzname(self, dt=None):
         total_seconds = SECONDS_PER_DAY * self.offset.days + self.offset.seconds
         if total_seconds == 0:
-            return 'UTC'
+            return "UTC"
 
-        sign = '-' if total_seconds < 0 else '+'
+        sign = "-" if total_seconds < 0 else "+"
         total_seconds = abs(total_seconds)
         components = {
-            'sign': sign,
-            'hours': int(total_seconds / SECONDS_PER_HOUR),
-            'minutes': int((total_seconds % SECONDS_PER_HOUR)/SECONDS_PER_MINUTE),
-            'seconds': total_seconds % SECONDS_PER_MINUTE
+            "sign": sign,
+            "hours": int(total_seconds / SECONDS_PER_HOUR),
+            "minutes": int((total_seconds % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE),
+            "seconds": total_seconds % SECONDS_PER_MINUTE,
         }
-        if components['seconds']:
-            spec = 'UTC{sign}{hours:02d}:{minutes:02d}:{seconds:02d}'
+        if components["seconds"]:
+            spec = "UTC{sign}{hours:02d}:{minutes:02d}:{seconds:02d}"
         else:
-            spec = 'UTC{sign}{hours:02d}:{minutes:02d}'
+            spec = "UTC{sign}{hours:02d}:{minutes:02d}"
         return spec.format(**components)
 
     def localize(self, dt):
@@ -63,9 +62,11 @@ class UTC(datetime.tzinfo):
         return self.tzname()
 
     def __repr__(self):
-        total_hours = HOURS_PER_DAY * self.offset.days + \
-                      float(self.offset.seconds) / SECONDS_PER_HOUR
-        return 'UTC({0:+.8g})'.format(total_hours) if total_hours else 'UTC()'
+        total_hours = (
+            HOURS_PER_DAY * self.offset.days
+            + float(self.offset.seconds) / SECONDS_PER_HOUR
+        )
+        return "UTC({0:+.8g})".format(total_hours) if total_hours else "UTC()"
 
 
 def localize_datetime(dt, tz):
@@ -88,28 +89,30 @@ def datetime_from_isoformat(iso_str):
             '2013-08-19T14:29Z', '2013-08-19 14:29+10:00'
 
     """
-    match = re.match('^(.*:.*)([\+\-])(\d\d)(?::(\d\d))?$', iso_str)
+    match = re.match("^(.*:.*)([\+\-])(\d\d)(?::(\d\d))?$", iso_str)
     if match is not None:
         dt_str, tz_sign, tz_hr, tz_min = match.groups(0)
-        offset = int(tz_hr) + int(tz_min)/60.
-        if tz_sign == '-':
+        offset = int(tz_hr) + int(tz_min) / 60.
+        if tz_sign == "-":
             offset *= -1
         tz = UTC(offset)
     else:
-        if iso_str.endswith('Z'):
+        if iso_str.endswith("Z"):
             tz = utc
         else:
             tz = local_tz
-        dt_str = iso_str.rstrip('Z')
-    dt_str = dt_str.replace('T', ' ')
+        dt_str = iso_str.rstrip("Z")
+    dt_str = dt_str.replace("T", " ")
 
-    formats = ['%Y-%m-%d %H:%M:%S.%f',
-               '%Y-%m-%d %H:%M:%S',
-               '%Y-%m-%d %H:%M',
-               '%Y-%m-%d %H',
-               '%Y-%m-%d',
-               '%Y-%m',
-               '%Y']
+    formats = [
+        "%Y-%m-%d %H:%M:%S.%f",
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%d %H:%M",
+        "%Y-%m-%d %H",
+        "%Y-%m-%d",
+        "%Y-%m",
+        "%Y",
+    ]
 
     dt = None
     for f in formats:
@@ -120,8 +123,7 @@ def datetime_from_isoformat(iso_str):
         else:
             break
     if dt is None:
-        raise ValueError(('{0} is not a recognized '
-                          'datetime format').format(iso_str))
+        raise ValueError(("{0} is not a recognized " "datetime format").format(iso_str))
     dt = tz.localize(dt)
     return dt
 
@@ -141,7 +143,7 @@ def datetime_from_sec_and_nano(seconds, nanoseconds=0, tz=None):
     if nanoseconds < 999999500:
         dt = dt.replace(microsecond=int(round(1.e-3 * nanoseconds)))
     else:
-        dt = datetime.datetime.fromtimestamp(seconds+1, utc)
+        dt = datetime.datetime.fromtimestamp(seconds + 1, utc)
     return dt.astimezone(tz)
 
 
@@ -155,8 +157,9 @@ def sec_and_nano_from_datetime(dt):
     return seconds, nanoseconds
 
 
-def overlap_between_intervals(first_range_start, first_range_end,
-                              second_range_start, second_range_end):
+def overlap_between_intervals(
+    first_range_start, first_range_end, second_range_start, second_range_end
+):
 
     latest_start = max(first_range_start, second_range_start)
     earliest_end = min(first_range_end, second_range_end)
@@ -164,15 +167,16 @@ def overlap_between_intervals(first_range_start, first_range_end,
     return max(earliest_end - latest_start, datetime.timedelta(0))
 
 
-def pretty_list_repr(lst, value_format='{0!r}', max_line_len=79, prefix='',
-                     min_value_len=0):
+def pretty_list_repr(
+    lst, value_format="{0!r}", max_line_len=79, prefix="", min_value_len=0
+):
     if not lst:
         return repr(lst)
     lst = [value_format.format(v) for v in lst]
     values = len(lst)
     max_value_len = max(min_value_len, *(len(v) for v in lst))
     prefix_len = len(prefix)
-    delim = ', '
+    delim = ", "
     delim_len = len(delim)
     paren_len = 2
     chars_per_line = max_line_len + delim_len - prefix_len - paren_len
@@ -181,19 +185,19 @@ def pretty_list_repr(lst, value_format='{0!r}', max_line_len=79, prefix='',
     lines = int(values / values_per_line)
     if values % values_per_line != 0:
         lines += 1
-    space_spec = '{0:>' + str(max_value_len) + '}'
-    start_space = ' ' * (prefix_len + 1)
+    space_spec = "{0:>" + str(max_value_len) + "}"
+    start_space = " " * (prefix_len + 1)
     s = prefix
     for line in range(lines):
         offset = line * values_per_line
-        line_lst = lst[offset:(offset+values_per_line)]
-        s += '[' if line == 0 else start_space
+        line_lst = lst[offset : (offset + values_per_line)]
+        s += "[" if line == 0 else start_space
         s += delim.join(space_spec.format(s) for s in line_lst)
-        s += ']' if line == lines - 1 else ',\n'
+        s += "]" if line == lines - 1 else ",\n"
     return s
 
 
-def max_value_len_in_waveform(lst, value_format='{0!r}'):
+def max_value_len_in_waveform(lst, value_format="{0!r}"):
     max_value_len = 0
     for sub_lst in lst:
         sub_max_val_len = max(len(value_format.format(v)) for v in sub_lst)
@@ -201,13 +205,13 @@ def max_value_len_in_waveform(lst, value_format='{0!r}'):
     return max_value_len
 
 
-def pretty_waveform_repr(lst, value_format='{0!r}', max_line_len=79, prefix=''):
+def pretty_waveform_repr(lst, value_format="{0!r}", max_line_len=79, prefix=""):
     max_value_len = max_value_len_in_waveform(lst, value_format)
-    s = ''
+    s = ""
     for idx, sub_lst in enumerate(lst):
-        p = prefix + '[' if idx == 0 else ' ' * (len(prefix) + 1)
+        p = prefix + "[" if idx == 0 else " " * (len(prefix) + 1)
         s += pretty_list_repr(sub_lst, value_format, max_line_len, p, max_value_len)
-        s += ']' if idx == len(lst) - 1 else ',\n'
+        s += "]" if idx == len(lst) - 1 else ",\n"
     return s
 
 

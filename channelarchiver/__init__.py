@@ -22,7 +22,7 @@ from .channelarchiver import Archiver
 from . import codes
 
 
-__title__ = 'channelarchiver'
-__version__ = '0.1.0'
-__license__ = 'MIT'
+__title__ = "channelarchiver"
+__version__ = "1.0.0"
+__license__ = "MIT"
 __all__ = [Archiver, codes]

@@ -24,7 +24,7 @@ status = Codes(
     DISABLE_ALARM=18,
     SIMM_ALARM=19,
     READ_ACCESS_ALARM=20,
-    WRITE_ACCESS_ALARM=21
+    WRITE_ACCESS_ALARM=21,
 )
 
 severity = Codes(
@@ -39,20 +39,9 @@ severity = Codes(
     ARCHIVE_DISABLED=3848,
 )
 
-interpolation = Codes(
-    RAW=0,
-    SPREADSHEET=1,
-    AVERAGED=2,
-    PLOT_BINNING=3,
-    LINEAR=4,
-)
+interpolation = Codes(RAW=0, SPREADSHEET=1, AVERAGED=2, PLOT_BINNING=3, LINEAR=4)
 
-data_type = Codes(
-    STRING=0,
-    ENUM=1,
-    INT=2,
-    DOUBLE=3,
-)
+data_type = Codes(STRING=0, ENUM=1, INT=2, DOUBLE=3)
 
 xmlrpc = Codes(
     UNSPECIFIED=0,
@@ -69,9 +58,4 @@ xmlrpc = Codes(
     INVALID_UTF8=-510,
 )
 
-archiver = Codes(
-    SEVER_FAULT=-600,
-    NO_INDEX=-601,
-    ARGUMENT_ERROR=-602,
-    DATA_ERROR=-603,
-)
+archiver = Codes(SEVER_FAULT=-600, NO_INDEX=-601, ARGUMENT_ERROR=-602, DATA_ERROR=-603)
