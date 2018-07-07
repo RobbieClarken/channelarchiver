@@ -66,7 +66,7 @@ class UTC(datetime.tzinfo):
             HOURS_PER_DAY * self.offset.days
             + float(self.offset.seconds) / SECONDS_PER_HOUR
         )
-        return "UTC({0:+.8g})".format(total_hours) if total_hours else "UTC()"
+        return f"UTC({total_hours:+.8g})" if total_hours else "UTC()"
 
 
 def localize_datetime(dt, tz):

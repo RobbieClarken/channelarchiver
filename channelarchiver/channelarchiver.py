@@ -201,11 +201,7 @@ class Archiver(object):
                         greatest_overlap = overlap
                 if key_with_greatest_overlap is None:
                     raise ChannelNotFound(
-                        (
-                            "Channel {0} not found in "
-                            "any archive (an archive scan "
-                            "may be needed)."
-                        ).format(channel)
+                        f"Channel {channel} not found in any archive (a scan may be needed)"
                     )
                 channels_for_key[key_with_greatest_overlap].append(channel)
         else:
@@ -213,7 +209,7 @@ class Archiver(object):
             # with a single query
             if len(channels) != len(archive_keys):
                 raise ChannelKeyMismatch(
-                    "Number of archive keys must " "equal number of channels."
+                    "Number of archive keys must equal number of channels."
                 )
             key_for_channel = dict(zip(channels, archive_keys))
             grouping_func = key_for_channel.get

@@ -27,9 +27,7 @@ def check_type(value, check_type, expected_name):
         supplied_name = type(value).__name__.upper()
         raise Fault(
             codes.xmlrpc.TYPE,
-            ("Value of type {0} supplied where type {1} was " "expected.").format(
-                supplied_name, expected_name
-            ),
+            f"Value of type {supplied_name} supplied where type {expected_name} was expected.",
         )
 
 
@@ -128,7 +126,7 @@ class MockArchiver(object):
                 codes.archiver.ARGUMENT_ERROR, "Invalid how={0}".format(interpolation)
             )
         if interpolation != 0:
-            raise Exception("Only raw interpolation is supported by" "MockArchiver.")
+            raise Exception("Only raw interpolation is supported by MockArchiver.")
         key = str(key)
         self._check_key(key)
         archive_data = self._archives[key]["data"]

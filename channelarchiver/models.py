@@ -89,7 +89,7 @@ class ChannelData(object):
         """Return the data in a numpy array structure."""
 
         if not HAS_NUMPY:
-            raise exceptions.NumpyNotInstalled("Numpy not found.")
+            raise exceptions.NumpyNotInstalled("Numpy not found")
 
         # Only compute the array once
         if self._array is None:
@@ -133,7 +133,7 @@ class ChannelData(object):
             value = self.__getattribute__(attr)
             if value is None:
                 continue
-            prefix = "    {0}=".format(attr)
+            prefix = f"    {attr}="
             s += utils.pretty_list_repr(value, prefix=prefix)
             s += ",\n"
         for attr in [
@@ -150,7 +150,7 @@ class ChannelData(object):
             value = self.__getattribute__(attr)
             if value is None:
                 continue
-            s += "    {0}={1!r},\n".format(attr, value)
+            s += f"    {attr}={value!r},\n"
         s = s[:-2]
         s += "\n)"
         return s

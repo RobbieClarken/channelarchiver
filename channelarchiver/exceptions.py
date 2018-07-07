@@ -6,7 +6,7 @@ class ChannelNotFound(LookupError):
 
 
 class ChannelKeyMismatch(IndexError):
-    """There should be the same number of keys as channels"""
+    """There should be the same number of keys as channels."""
 
 
 class NumpyNotInstalled(ImportError):
