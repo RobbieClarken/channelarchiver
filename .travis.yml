@@ -1,9 +1,13 @@
 language: python
-python:
-  - 3.6
-sudo: false
+dist: xenial
+sudo: required
+matrix:
+  include:
+    - python: 3.6
+      env: TOXENV=py36
+    - python: 3.7
+      env: TOXENV=py37
 install:
-  - pip install -r requirements.txt
-  - pip install .
+  - python3 -m pip install tox
 script:
-  - pytest -v
+  - tox

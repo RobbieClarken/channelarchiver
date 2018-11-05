@@ -89,7 +89,7 @@ def datetime_from_isoformat(iso_str):
             '2013-08-19T14:29Z', '2013-08-19 14:29+10:00'
 
     """
-    match = re.match("^(.*:.*)([\+\-])(\d\d)(?::(\d\d))?$", iso_str)
+    match = re.match(r"^(.*:.*)([\+\-])(\d\d)(?::(\d\d))?$", iso_str)
     if match is not None:
         dt_str, tz_sign, tz_hr, tz_min = match.groups(0)
         offset = int(tz_hr) + int(tz_min) / 60.

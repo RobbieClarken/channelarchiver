@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from setuptools import setup
 import re
 
@@ -24,10 +22,9 @@ setup(
         "Intended Audience :: Science/Research",
         "Natural Language :: English",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.6",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "License :: OSI Approved :: MIT License",
     ],
 )

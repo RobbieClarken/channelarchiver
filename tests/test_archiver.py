@@ -1,7 +1,7 @@
 from datetime import datetime
 
 import pytest
-from mock import Mock
+from unittest.mock import Mock
 
 from channelarchiver import Archiver, codes, utils, exceptions
 from channelarchiver.models import ChannelData, ArchiveProperties
